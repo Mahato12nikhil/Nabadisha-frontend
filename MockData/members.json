@@ -1,0 +1,224 @@
+{
+   "data": [
+        {
+            "_id":"34iuruuwriuhgfi32434",
+            "name": "Asish Mahato",
+            "username": "asish123",
+            "role":"secretary",
+            "userpic":"https://i.imgur.com/pAo2VKt_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwvBBFri334324uhg34",
+            "name": "Chanakya Mahato",
+            "username": "chanakya123",
+            "role":"treasurer",
+            "userpic":"https://i.imgur.com/Z5V5L2s_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/chanakya.mahato.94",
+                "instagram":"https://www.instagram.com/chanakya.mahato.94?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+                "linkedin":"https://www.linkedin.com/in/chanakya-mahato-cm6297?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAD0vFS4BVXk8WGh51zN1u94YDbJcaOx9quI&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BA%2BlXU7eqQ22qF5cTwyJj1w%3D%3D",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwrisdgw334324uhg34",
+            "name": "Nripen Mahato",
+            "username": "nripen123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/opxROo7_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/nripen.mahato.90",
+                "instagram":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwri3343235354uhg34",
+            "name": "Nikhil Mahato",
+            "username": "nikhil123",
+            "role":"president",
+            "userpic":"https://i.imgur.com/XXzBG4K_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/nikhilmahato4/",
+                "instagram":"https://www.instagram.com/nikhilpy27/",
+                "linkedin":"https://www.linkedin.com/in/nikhil-mahato-aa8785136/"
+            }
+        },
+        {
+            "_id":"34iuruuwri33433432462536uhg34",
+            "name": "Dibyendu Mahato",
+            "username": "duke123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/ZUCLoBG_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/dibyendu.mahato.1232",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwri332642653432524uhg34",
+            "name": "Bhawesh Mahato",
+            "username": "Bhawesh123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/fbTy4We_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwri332642353546dfsdfg432524uhg34",
+            "name": "Tapan Mahato",
+            "username": "tapan123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/aKYvZTx_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwri3326445425343252463g34",
+            "name": "Malay Mahato",
+            "username": "malay123",
+            "role":"vice_president",
+            "userpic":"https://i.imgur.com/DyB7veK_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/malaymahato.mahato.18",
+                "instagram":"https://www.instagram.com/malaymahatomahato/",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"34iuruuwri3dfshh5425343252463g34",
+            "name": "Sanjib Mahato",
+            "username": "sanjib123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/nsMLbeR_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"33532hbdfshh5425343252463g34",
+            "name": "Amit Mahato",
+            "username": "amit123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/e4q8htb_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"33535245fshh542kn43252463g34",
+            "name": "Sandip Mahato",
+            "username": "sandip123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/QdNSm1F_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"33535245fshh54625365343252463g34",
+            "name": "Sananta Mahato",
+            "username": "sananta123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/c1Ckgsc_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/sananta.mahato.3",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"33535245fshh5424546343252463g34",
+            "name": "Manjura Mahato",
+            "username": "manjura123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/XviVfzs_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/manjura.mahato.52",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"33535245fshh54plfn343stn463g34",
+            "name": "Prabodh Mahato",
+            "username": "prabodh123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/etF3tGL_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/profile.php?id=100088738729371",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"335352jgnrejlhnlfn343252463g34",
+            "name": "Bidyut Mahato",
+            "username": "bidyut123",
+            "role":"ast_secretary",
+            "userpic":"https://i.imgur.com/jRMglhc_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/bidyuy.mahato",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"335352jgnrejlhnlasfrh252463g34",
+            "name": "Dhrubajit Mahato",
+            "username": "dhrub123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/rshx8Kx_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"https://www.facebook.com/dhrubajit.mahato.3",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        },
+        {
+            "_id":"335352jgnrefgfh43252463g34",
+            "name": "Sidhhartha Mahato",
+            "username": "sid123",
+            "role":"member",
+            "userpic":"https://i.imgur.com/cavuNRy_d.webp?maxwidth=128&shape=square",
+            "social":{
+                "facebook":"",
+                "instagram":"",
+                "linkedin":"",
+                "youtube":""
+            }
+        }
+    
+    ]
+}
