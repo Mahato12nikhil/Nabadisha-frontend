@@ -5,9 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
+  --background: oklch(0.98 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: oklch(0.98 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
@@ -17,7 +17,7 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.92 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
@@ -38,12 +38,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --language-toggle-button-background: oklch(0.93 0 0);
+  --separator-color: oklch(0.2 0 0);
+
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.3 0.00 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
+  --card: oklch(0.36 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
@@ -73,6 +76,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+  --language-toggle-button-background: oklch(0.3 0 0);
+  --separator-color: oklch(0.8 0 0);
 }
 
 @theme inline {
@@ -112,6 +117,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-toggle-button-back: var(--language-toggle-button-background);
+  --color-separator: var(--separator-color)
 }
 
 @layer base {
@@ -124,13 +131,12 @@
 }
 @layer utilities {
   .home{
-    @apply w-[100%] flex flex-col justify-center items-center
+    @apply w-[100%] flex flex-col justify-center items-center pt-10
            transition-all duration-700 ease-in-out bg-background relative
   }
   .navbar {
     @apply flex sm:flex-row w-full h-auto shadow-md dark:shadow-[0_4px_10px_rgba(255,255,255,0.1)]
-    p-2 items-center justify-between 
-           transition-all duration-700 ease-in-out 
+    p-2 items-center justify-between
            bg-background text-foreground;
 }
 
@@ -145,7 +151,10 @@
   }
 
   .navbar-content-item{
-    @apply p-4 hover:bg-accent font-thin text-lg text-center self-center
+    @apply p-4 hover:bg-accent font-thin text-lg text-center self-center cursor-pointer
+  }
+  .slow-transit{
+    @apply transition-all duration-700 ease-in-out
   }
 }
 

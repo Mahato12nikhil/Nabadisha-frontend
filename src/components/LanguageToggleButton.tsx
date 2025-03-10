@@ -5,7 +5,7 @@ const LanguageToggle = () => {
     const { language, toggleLanguage } = useLanguage();
 
     return (
-        <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-full">
+        <div className="flex items-center gap-2 p-2 bg-toggle-button-back dark:bg-gray-800 rounded-full">
             <button
                 onClick={toggleLanguage}
                 className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
