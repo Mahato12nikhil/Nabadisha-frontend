@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col sm:flex-row justify-between items-center">
           <div className="flex flex-col items-center sm:items-start">
-            <p>&copy; {new Date().getFullYear()} Your Company. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()} BNP Nabadisha Sangha. All Rights Reserved.</p>
             <div className="mt-2 flex space-x-4">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                 <FaFacebook size={24} />

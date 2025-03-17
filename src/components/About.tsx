@@ -1,7 +1,7 @@
 import img from '../assets/nabadisha_poster.png';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { fetchAboutContent } from '../store/reducers/sectionSlice';
+import { fetchAboutContent } from '../store/reducers/section';
 import { useLanguage } from '../hooks/LanguageProvider';
 
 const About: React.FC = () => {

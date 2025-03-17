@@ -12,6 +12,8 @@ import { Input } from "../components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
+import { useAppDispatch } from "../store/store";
+import { login } from "../store/reducers/user";
 
 const FormSchema = z.object({
   username: z.string().min(5, {
@@ -23,6 +25,8 @@ const FormSchema = z.object({
 });
 
 const Login: React.FC = () => {
+  const dispatch=useAppDispatch();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -32,7 +36,8 @@ const Login: React.FC = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+    if(data)
+      dispatch(login({ username: data.username, password: data.password }));
   }
 
   return (

@@ -1,10 +1,18 @@
+import { useEffect } from "react";
 import { Separator } from "../../components/ui/separator";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 type DashBoardType="Events"|  "Profile" |  "Treasurer" | "Admin"
 
 function DashBoardHeader() {
 
-  const dashBoardTabs: DashBoardType [] =["Events", "Profile", "Treasurer", "Admin"]  
+  const dashBoardTabs: DashBoardType [] =["Events", "Profile", "Treasurer", "Admin"] 
+  const dispatch=useAppDispatch();
+
+  useEffect(()=>{
+    //get menu list
+    //dispatch();
+  },[])
 
   return (
     <div>

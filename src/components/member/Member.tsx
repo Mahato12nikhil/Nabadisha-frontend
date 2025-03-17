@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import MemberCard from "./MemberCard";
-import { fetchMembers } from "../../store/reducers/memberSlice";
+import { fetchMembers } from "../../store/reducers/member";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
 const Member: React.FC =()=>{

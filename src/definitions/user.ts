@@ -5,16 +5,32 @@ export interface ISocial{
     youtube?:string
 }
 export interface IUser{
-    _id:string,
-    name:string,
-    username:string,
-    role:string,
-    userpic?:string,
-    social?:ISocial
+    name: string;
+    username: string;
+    phone: string;
+    isActive: boolean;
+    userPic?: string;
+    role: string;
+    socials?: ISocial;
+    createdAt: number;
+    createdBy: string;
+    updatedAt: number;
+    updatedBy: string;
 }
 
 export interface GetMembersResponse{
     success:boolean,
-    data:IUser[]
+    data:IUser
 }
-
+export interface GetLoginResponse{
+    success:boolean,
+    data:{
+        token:string,
+        refreshToken:string,
+        user: IUser
+    }
+}
+export interface LoginPayload{
+    username:string,
+    password:string
+}

@@ -1,17 +1,18 @@
 import axios, { AxiosHeaders, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import { store } from "../store/store";
 
 export class RestService{
     client: AxiosInstance;
     constructor(config: AxiosRequestConfig){
         this.client=axios.create(config);
         const reqHandler=(config: InternalAxiosRequestConfig)=>{
-           // const {token}=store.getState().token;
+            const {token}=store.getState().user;
             config.headers = new AxiosHeaders();
 
-            // if(token){
-            //     config.headers.Authorization=`Bearer ${token}`
-            // }
-            return config
+            if(token){
+                config.headers.Authorization=`Bearer ${token}`
+            }
+            return config;
         }
         const errorHandler = (err: any) => {
             return Promise.reject(err);
