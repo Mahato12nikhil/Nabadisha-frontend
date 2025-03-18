@@ -10,7 +10,7 @@ export interface IUser{
     phone: string;
     isActive: boolean;
     userPic?: string;
-    role: string;
+    roles: string[];
     socials?: ISocial;
     createdAt: number;
     createdBy: string;

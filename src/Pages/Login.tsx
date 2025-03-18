@@ -12,8 +12,10 @@ import { Input } from "../components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
-import { useAppDispatch } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { login } from "../store/reducers/user";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const FormSchema = z.object({
   username: z.string().min(5, {
@@ -25,6 +27,13 @@ const FormSchema = z.object({
 });
 
 const Login: React.FC = () => {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  const {user}=useAppSelector(state=>state.user);
+
   const dispatch=useAppDispatch();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -39,6 +48,11 @@ const Login: React.FC = () => {
     if(data)
       dispatch(login({ username: data.username, password: data.password }));
   }
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
   return (
     <div className="flex items-center justify-center pt-5">

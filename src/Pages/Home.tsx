@@ -2,8 +2,6 @@ import About from "../components/About";
 import HomeCarousel from "../components/HomeCarousel";
 import Member from "../components/member/Member";
 import Tag from "../components/Tag";
-import DashBoard from "./dashboard/DashBoard";
-import Login from "./Login";
 const Home:React.FC=()=>{
 
     return (
@@ -13,7 +11,6 @@ const Home:React.FC=()=>{
             <HomeCarousel/>
             <About/>
             <Member/>
-            <DashBoard/>
         </div>
     )
 }

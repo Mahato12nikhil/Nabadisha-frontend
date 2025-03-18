@@ -17,6 +17,13 @@ export const Login=(payload:LoginPayload)=>{
     return getClient().post(urls.login, payload);
 }
 
+export const RenewLogin=(refreshToken:string)=>{
+    return getClient().post(urls.renewLogin, {refreshToken});
+}
+
+export const GetDashBoardMenu=(roles:string[])=>{
+    return getClient().post(urls.dashMenu, {roles});
+}
 export const CreateUser=()=>{
     
 }
