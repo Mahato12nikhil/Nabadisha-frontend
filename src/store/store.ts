@@ -4,14 +4,15 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import memberSlice from './reducers/member';
 import UserSlice from './reducers/user';
 import dashBoardSlice from './reducers/dashboard';
+import eventSlice from './reducers/event';
 
 export const store=configureStore({
     reducer:{
         section: SectionSlice,
         member:memberSlice,
         user: UserSlice.reducer,
-        dashboard:dashBoardSlice.reducer
-
+        dashboard:dashBoardSlice.reducer,
+        event:eventSlice.reducer
     }  
 });
 export type RootState=ReturnType<typeof store.getState>

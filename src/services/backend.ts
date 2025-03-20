@@ -24,6 +24,14 @@ export const RenewLogin=(refreshToken:string)=>{
 export const GetDashBoardMenu=(roles:string[])=>{
     return getClient().post(urls.dashMenu, {roles});
 }
+
+export const GetAllEvents=()=>{
+    return getClient().get(urls.getEvents);
+}
+export const GetCollections=(eventId: string, pageIndex=0, pageSize=10)=>{
+    const url=urls.getCollections+eventId+"&&"+"pageIndex="+pageIndex+"&&"+"pageSize="+pageSize;
+    return getClient().get(url);
+}
 export const CreateUser=()=>{
     
 }

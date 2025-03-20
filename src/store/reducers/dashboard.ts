@@ -23,9 +23,9 @@ export const dashboardMenu = createAsyncThunk<DashBoardMenuResponse, { roles: st
         }
     }
 );
-const dashmenuPrefix = {
+export const dashmenuPrefix = {
     admin: 'admin',
-    profile: 'profile',
+    // profile: 'profile',
     event: 'event',
     treasurer: 'treasurer',
 };
@@ -37,8 +37,9 @@ const convertToMenu = (permissions: string[]) => {
     permissions.forEach(permission => {
         if (permission.startsWith(dashmenuPrefix.admin)) {
             menuSet.add('Admin');
-        } else if (permission.startsWith(dashmenuPrefix.profile)) {
-            menuSet.add('Profile');
+        // } else if (permission.startsWith(dashmenuPrefix.profile)) {
+        //     menuSet.add('Profile');
+        // 
         } else if (permission.startsWith(dashmenuPrefix.event)) {
             menuSet.add('Event');
         } else if (permission.startsWith(dashmenuPrefix.treasurer)) {
