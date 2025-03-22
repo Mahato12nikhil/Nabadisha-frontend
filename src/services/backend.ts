@@ -5,12 +5,16 @@ import { baseUrl, urls } from "./url";
 const serviceClient=new RestService({baseURL:baseUrl});
 const getClient=()=>serviceClient.client;
 
+const localClient=new RestService({baseURL:"http://localhost:5173"});
+const getLocalClient=()=>localClient.client;
+
+
 export const GetAboutContent=()=>{
-    return getClient().get(urls.about);
+    return getLocalClient().get(urls.about);
 }
 
 export const GetMembers=()=>{
-    return getClient().get(urls.members);
+    return getLocalClient().get(urls.members);
 }
 
 export const Login=(payload:LoginPayload)=>{

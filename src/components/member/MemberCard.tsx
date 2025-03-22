@@ -10,8 +10,22 @@ import Autoplay from "embla-carousel-autoplay";
 import Social from "../Social";
 import { IUser } from "../../definitions/user";
 
+interface IMember{
+  _id:string,
+  name: string,
+  username: string,
+  role:string,
+  userpic:string,
+  social:{
+      facebook?:string,
+      instagram?:string,
+      linkedin?:string,
+      youtube?:string
+  }
+}
+
 interface MemberCardProps {
-  members: IUser[];
+  members: IMember[];
 }
 
 

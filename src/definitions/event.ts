@@ -30,6 +30,7 @@ export interface ICollection{
     amount:number,
     treasurer:string,
     approved:boolean,
+    approvedBy?:string,
     createdAt:number,
     createdBy:string
 }
@@ -37,5 +38,7 @@ export interface GetEventCollectionResponse{
     success:boolean,
     data?:ICollection[],
     totalCount?:number,
+    totalCollection?:number,
+    currentUserCollection?:number,
     message?:string,
 }

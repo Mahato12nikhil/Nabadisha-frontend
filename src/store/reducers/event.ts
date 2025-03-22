@@ -14,20 +14,30 @@ interface EventState {
   events: IEvent[];
   selectedEvent: IEvent | undefined;
   collection: {
-    selectedEventCollections: ICollection[];
+    data: ICollection[];
     totalCount: number;
+    pageSize: number;
+    pageIndex:number,
+    totalCollection:number,
+    currentUserCollection:number
   };
 }
+
 const initialState: EventState = {
   loading: false,
   error: undefined,
   events: [],
   selectedEvent: undefined,
   collection: {
-    selectedEventCollections: [],
+    data: [], 
     totalCount: 0,
+    pageSize: 10,
+    pageIndex:0,
+    totalCollection:0,
+    currentUserCollection:0
   },
 };
+
 export const fetchEvents = createAsyncThunk<
   GetAllEventsResponse,
   void,
@@ -42,13 +52,14 @@ export const fetchEvents = createAsyncThunk<
 });
 export const fetchCollections = createAsyncThunk<
   GetEventCollectionResponse,
-  { eventId: string; pageIndex: number; pageSize: number },
+  { eventId: string },
   { state: RootState }
 >(
   "/event/collection/fetch",
-  async ({ eventId, pageIndex, pageSize }, thunkApi) => {
+  async ({ eventId }, thunkApi) => {
     try {
-      const response = await GetCollections(eventId, pageIndex, pageSize);
+      const { pageSize}=thunkApi.getState().event.collection;
+      const response = await GetCollections(eventId, 0, pageSize);
       return response.data;
     } catch (err) {
       return thunkApi.rejectWithValue("Failed to fetch collections");
@@ -84,18 +95,16 @@ const eventSlice = createSlice({
       .addCase(fetchCollections.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        fetchCollections.fulfilled,
-        (state, action: PayloadAction<GetEventCollectionResponse>) => {
+      .addCase(fetchCollections.fulfilled, (state, action) => {
+        if(action.payload.success){
           state.loading = false;
-          state.collection.totalCount=action.payload.totalCount || 0;
-          
-          state.collection!.selectedEventCollections = [
-            ...state.collection!.selectedEventCollections,
-            ...(action.payload?.data || []),
-          ];
+          state.collection.totalCount = action.payload.totalCount || 0;
+          state.collection.data = action.payload.data || []; 
+          state.collection.totalCollection=action.payload.totalCollection || 0;
+          state.collection.currentUserCollection=action.payload.currentUserCollection || 0;
+          state.collection.pageIndex=state.collection.pageIndex+1;
         }
-      )
+      })
       .addCase(fetchCollections.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;

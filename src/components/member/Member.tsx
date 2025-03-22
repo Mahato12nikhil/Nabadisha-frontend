@@ -3,9 +3,10 @@ import MemberCard from "./MemberCard";
 import { fetchMembers } from "../../store/reducers/member";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
+import members from '../../../MockData/members.json'
 const Member: React.FC =()=>{
     const dispatch=useAppDispatch()
-    const members=useAppSelector(state=>state.member)
+    //const members=useAppSelector(state=>state.member)
 
     
     useEffect(()=>{
@@ -17,7 +18,7 @@ const Member: React.FC =()=>{
 
             <h2 className="text-2xl mb-5">| Meet us</h2>
             <div className="w-full flex flex-row items-center justify-center">
-                <MemberCard members={members}/>
+                <MemberCard members={members.data}/>
             </div>
            
         </section>
