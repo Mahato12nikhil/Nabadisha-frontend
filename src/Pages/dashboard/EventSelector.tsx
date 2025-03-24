@@ -10,6 +10,8 @@ import {
 } from "../../components/ui/select";
 import { IEvent } from "../../definitions/event";
 import { useEffect, useState } from "react";
+import { useAppDispatch } from "../../store/store";
+import { setSelectedEvent } from "../../store/reducers/event";
 
 interface EventProps {
   events: IEvent[];
@@ -17,18 +19,23 @@ interface EventProps {
 }
 
 const EventSelector: React.FC<EventProps> = ({ events, onSelect }) => {
-  const [selectedEvent, setSelectedEvent] = useState<string>("");
+  const dispatch=useAppDispatch();
+  const [selectedEvent, setEvent] = useState<string>("");
 
   useEffect(() => {
     if (events.length > 0) {
-      setSelectedEvent(events[0]?._id);
+      setEvent(events[0]?._id);
       onSelect(events[0]?._id);
+      dispatch(setSelectedEvent(events[0]))
     }
   }, [events]); 
 
+
   function handleChange(val:string){
-    setSelectedEvent(val);
+    setEvent(val);
     onSelect(val);
+    const selected = events.find((event) => event._id === val);
+    dispatch(setSelectedEvent(selected))
   }
   return (
     <Select value={selectedEvent} onValueChange={handleChange}>

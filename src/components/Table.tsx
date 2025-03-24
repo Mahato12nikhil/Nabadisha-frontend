@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ICollection } from "../definitions/event";
+import { ICollection, IExpense } from "../definitions/event";
 import { CellValueChangedEvent, ColDef, GridReadyEvent, themeAlpine, themeBalham, themeQuartz } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { CellStyleModule, ClientSideRowModelModule, ColumnAutoSizeModule, ModuleRegistry, NumberEditorModule, NumberFilterModule, PaginationModule, QuickFilterModule, TextEditorModule, TextFilterModule, ValidationModule } from "ag-grid-community";
@@ -17,54 +17,11 @@ ModuleRegistry.registerModules([
   NumberEditorModule,
   TextFilterModule
 ]);
-const hardcodedData: ICollection[] = [
-  {
-    _id: "67dc4d6972c1da1f0e70180e",
-    eventId: "67db0140e6a9d94b79fa699b",
-    amount: 53605,
-    contributor: "Clarke Lowe",
-    treasurer: "chanakya123",
-    approved: false,
-    createdAt: 1737907146403,
-    createdBy: "fugiat",
-    approvedBy: ""
-  },
-  {
-    _id: "67dc4d6972c1da1f0e70180d",
-    eventId: "67db0140e6a9d94b79fa699b",
-    amount: 98659,
-    contributor: "Jana Carlson",
-    treasurer: "chanakya123",
-    approved: false,
-    createdAt: 1736068433149,
-    createdBy: "amet",
-  },
-  {
-    _id: "67dc4d6972c1da1f0e70180c",
-    eventId: "67db0140e6a9d94b79fa699b",
-    amount: 83547,
-    contributor: "Stacie Luna",
-    treasurer: "chanakya123",
-    approved: true,
-    createdAt: 1740007669843,
-    createdBy: "enim",
-  },
-  {
-    _id: "67dc4d6972c1da1f0e70180b",
-    eventId: "67db0140e6a9d94b79fa699b",
-    amount: 60024,
-    contributor: "Bush Anderson",
-    treasurer: "chanakya123",
-    approved: true,
-    createdAt: 1740378759571,
-    createdBy: "occaecat",
-  }
-];
 interface TableProps {
-  coldefs:  ColDef<ICollection>[],
-  data:ICollection[],
+  coldefs: ColDef<ICollection | IExpense | any>[];
+  data: (ICollection | IExpense )[];
   currentUserName: string;
-  onSave: (id: string, updatedData: Partial<ICollection>) => void;
+  onSave: (id: string, updatedData: Partial<ICollection | IExpense>) => void;
 }
 const Table: React.FC<TableProps> = ({
   coldefs,
@@ -73,7 +30,7 @@ const Table: React.FC<TableProps> = ({
   onSave,
 })=>{
   console.log(data.at(0))
-  const gridRef = useRef<AgGridReact<ICollection>>(null);
+  const gridRef = useRef<AgGridReact<ICollection | IExpense>>(null);
   const [quickFilterText, setQuickFilterText] = useState<string>("");
   const [isGridReady, setIsGridReady] = useState<boolean>(false);
 
@@ -88,12 +45,16 @@ const Table: React.FC<TableProps> = ({
 
   
   const onCellValueChanged = useCallback(
-    (event: CellValueChangedEvent<ICollection>) => {
-      if (event.data?.createdBy === currentUserName) {
-        onSave(event.data._id, event.data);
-      }
-    },
-    [currentUserName, onSave]
+      (event: CellValueChangedEvent<ICollection | IExpense>) => {
+        console.log("Saving updated data...");
+    
+        if (event.data?.createdBy === currentUserName) {
+          const updatedData = { ...event.data }; 
+    
+          onSave(updatedData._id, updatedData);
+        }
+      },
+      [currentUserName, onSave]
   );
 
  
@@ -110,7 +71,7 @@ const Table: React.FC<TableProps> = ({
       </div>
 
       <div className="w-full h-[500px] rounded-lg border">
-        <AgGridReact<ICollection>
+        <AgGridReact<ICollection | IExpense>
           ref={gridRef}
           modules={[ClientSideRowModelModule]}
           rowData={data}

@@ -42,3 +42,17 @@ export interface GetEventCollectionResponse{
     currentUserCollection?:number,
     message?:string,
 }
+export interface IExpense{
+    _id:string,
+    eventId:string,
+    name:string,
+    amount:number,
+    createdBy:string
+}
+export interface GetEventExpensesResponse{
+    success:boolean,
+    data?:IExpense[],
+    totalExpense?:number,
+    currentUserExpense?:number,
+    message?:string,
+}

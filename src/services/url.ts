@@ -1,4 +1,4 @@
-export const baseUrl='http://192.168.1.9:5090'
+export const baseUrl='http://localhost:5090'
 
 export const urls={
     sections:'/MockData/sections.json',
@@ -8,5 +8,6 @@ export const urls={
     renewLogin: '/api/v1/user/renewLogin',
     dashMenu:'/api/v1/dashboard/dashmenu',
     getEvents:'/api/v1/event/getAllEvents',
-    getCollections:'/api/v1/event/get-collections?eventId='
+    getCollections:'/api/v1/event/get-collections?eventId=',
+    getAllExpenses:'/api/v1/event/getAllExpenses?eventId='
 }

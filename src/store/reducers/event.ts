@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   GetAllEventsResponse,
   GetEventCollectionResponse,
+  GetEventExpensesResponse,
   ICollection,
   IEvent,
+  IExpense,
 } from "../../definitions/event";
 import { RootState } from "../store";
-import { GetAllEvents, GetCollections } from "../../services/backend";
+import { GetAllEvents, GetCollections, GetEventExpenses } from "../../services/backend";
 
 interface EventState {
   loading: boolean;
@@ -17,9 +19,14 @@ interface EventState {
     data: ICollection[];
     totalCount: number;
     pageSize: number;
-    pageIndex:number,
-    totalCollection:number,
-    currentUserCollection:number
+    pageIndex: number;
+    totalCollection: number;
+    currentUserCollection: number;
+  };
+  expense: {
+    data: IExpense[];
+    totalExpenses: number;
+    currentUserExpense:number
   };
 }
 
@@ -29,12 +36,17 @@ const initialState: EventState = {
   events: [],
   selectedEvent: undefined,
   collection: {
-    data: [], 
+    data: [],
     totalCount: 0,
     pageSize: 10,
-    pageIndex:0,
-    totalCollection:0,
-    currentUserCollection:0
+    pageIndex: 0,
+    totalCollection: 0,
+    currentUserCollection: 0,
+  },
+  expense: {
+    data: [],
+    totalExpenses: 0,
+    currentUserExpense:0
   },
 };
 
@@ -50,22 +62,34 @@ export const fetchEvents = createAsyncThunk<
     return thunkApi.rejectWithValue("Failed to fetch events");
   }
 });
+
 export const fetchCollections = createAsyncThunk<
   GetEventCollectionResponse,
   { eventId: string },
   { state: RootState }
->(
-  "/event/collection/fetch",
-  async ({ eventId }, thunkApi) => {
-    try {
-      const { pageSize}=thunkApi.getState().event.collection;
-      const response = await GetCollections(eventId, 0, pageSize);
-      return response.data;
-    } catch (err) {
-      return thunkApi.rejectWithValue("Failed to fetch collections");
-    }
+>("/event/collection/fetch", async ({ eventId }, thunkApi) => {
+  try {
+    const { pageSize } = thunkApi.getState().event.collection;
+    const response = await GetCollections(eventId, 0, pageSize);
+    return response.data;
+  } catch (err) {
+    return thunkApi.rejectWithValue("Failed to fetch collections");
   }
-);
+});
+
+export const fetchExpenses = createAsyncThunk<
+  GetEventExpensesResponse,
+  { eventId: string },
+  { state: RootState }
+>("/event/expense/fetch", async ({ eventId }, thunkApi) => {
+  try {
+    const response = await GetEventExpenses(eventId);
+    return response.data;
+  } catch (err) {
+    return thunkApi.rejectWithValue("Failed to fetch expenses");
+  }
+});
+
 const eventSlice = createSlice({
   name: "eventSlice",
   initialState,
@@ -96,19 +120,38 @@ const eventSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchCollections.fulfilled, (state, action) => {
-        if(action.payload.success){
+        if (action.payload.success) {
           state.loading = false;
           state.collection.totalCount = action.payload.totalCount || 0;
-          state.collection.data = action.payload.data || []; 
-          state.collection.totalCollection=action.payload.totalCollection || 0;
-          state.collection.currentUserCollection=action.payload.currentUserCollection || 0;
-          state.collection.pageIndex=state.collection.pageIndex+1;
+          state.collection.data = action.payload.data || [];
+          state.collection.totalCollection = action.payload.totalCollection || 0;
+          state.collection.currentUserCollection = action.payload.currentUserCollection || 0;
+          state.collection.pageIndex = state.collection.pageIndex + 1;
         }
       })
       .addCase(fetchCollections.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
+
+    builder
+      .addCase(fetchExpenses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchExpenses.fulfilled, (state, action) => {
+        if (action.payload.success) {
+          state.loading = false;
+          state.expense.data = action.payload.data || [];
+          state.expense.totalExpenses = action.payload.totalExpense || 0;
+          state.expense.currentUserExpense = action.payload.currentUserExpense || 0;
+        }
+      })
+      .addCase(fetchExpenses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
+
 export default eventSlice;
+export const { setSelectedEvent } = eventSlice.actions;

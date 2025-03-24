@@ -36,8 +36,9 @@ export const GetCollections=(eventId: string, pageIndex=0, pageSize=10)=>{
     const url=urls.getCollections+eventId+"&&"+"pageIndex="+pageIndex+"&&"+"pageSize="+pageSize;
     return getClient().get(url);
 }
-export const CreateUser=()=>{
-    
+export const GetEventExpenses=(eventId: string)=>{
+    const url=urls.getAllExpenses+eventId;
+    return getClient().get(url);
 }
 
 

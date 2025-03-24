@@ -9,8 +9,8 @@ interface DashBoardContentProps{
 const DashBoardContent: React.FC <DashBoardContentProps> =({section})=>{
     return (
         <div className="w-full bg-background">
-            {section==="event" && <Events/>}
-            {section==="treasurer" && <Treasurer/>}
+            {section.toLowerCase()==="event".toLowerCase() && <Events/>}
+            {section.toLowerCase()==="treasurer".toLowerCase() && <Treasurer/>}
             {section==="admin" && <Admin/>}
         </div>
     )

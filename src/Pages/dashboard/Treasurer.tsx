@@ -1,4 +1,3 @@
-import EventSelector from "./EventSelector";
 import { RiRadioButtonLine } from "react-icons/ri";
 
 const Treasurer : React.FC=()=>{
@@ -11,7 +10,6 @@ const Treasurer : React.FC=()=>{
             -*/}
             <div>
                 <div className="flex items-center">
-                    <EventSelector events={events}/>
                     <span className="m-5">
                        { status==="ongoing"? <div className="flex items-center">Ongoing <RiRadioButtonLine size={20} color="green"/></div> :<div className="flex items-center">Closed <RiRadioButtonLine size={20} color="red"/></div> }
                     </span>
