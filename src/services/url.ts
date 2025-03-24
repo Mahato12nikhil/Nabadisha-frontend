@@ -9,5 +9,6 @@ export const urls={
     dashMenu:'/api/v1/dashboard/dashmenu',
     getEvents:'/api/v1/event/getAllEvents',
     getCollections:'/api/v1/event/get-collections?eventId=',
-    getAllExpenses:'/api/v1/event/getAllExpenses?eventId='
+    getAllExpenses:'/api/v1/event/getAllExpenses?eventId=',
+    addCollection:'/api/v1/event/add-collection'
 }

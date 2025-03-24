@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Toaster } from "sonner";
 
 const Layout: React.FC = () => {
     return (
@@ -8,9 +9,10 @@ const Layout: React.FC = () => {
             <div className="w-full fixed top-0 z-10">
                 <Navbar />
             </div>
-            <div className="flex-1 mt-20">  
+            <div className="flex-1 mt-20"> 
                 <Outlet />
             </div>
+            <Toaster /> 
             <Footer />
         </div>
     );

@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { fetchCollections, fetchExpenses, fetchEvents } from "../../store/reducers/event";
+import {
+  fetchCollections,
+  fetchExpenses,
+  fetchEvents,
+} from "../../store/reducers/event";
 import EventSelector from "./EventSelector";
 import { ICollection, IExpense } from "../../definitions/event";
 import Table from "../../components/Table";
 import { ColDef } from "ag-grid-community";
 import Modal from "../../components/Modal";
+import { toast } from "sonner";
+import { AddCollection } from "../../services/backend";
 
 const Events: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { events, collection, expense, selectedEvent } = useAppSelector((state) => state.event);
+  const { events, collection, expense, selectedEvent } = useAppSelector(
+    (state) => state.event
+  );
   const { user } = useAppSelector((state) => state.user);
   const [eventId, setEventId] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCollectionMode, setIsCollectionMode] = useState(true);
-  const [newEntry, setNewEntry] = useState<{ name: string; description?:String,amount: string }>({ name: "", amount: "", description:"" });
+  const [newEntry, setNewEntry] = useState<{
+    name: string;
+    description?: String;
+    amount: string;
+  }>({ name: "", amount: "", description: "" });
 
   useEffect(() => {
     if (events.length === 0) {
@@ -33,11 +45,35 @@ const Events: React.FC = () => {
     setEventId(eventId);
   };
 
-  const handleSaveEntry = () => {
-    console.log(isCollectionMode ? "Saving collection:" : "Saving expense:", newEntry);
+  const handleSaveEntry = async () => {
+    if (!newEntry.name || Number(newEntry.amount) <= 0) {
+        toast.error("Please provide a valid name and amount.");
+        return;
+    }
+
     setIsModalOpen(false);
-    setNewEntry({ name: "", amount: "" });
-  };
+
+    try {
+        if (isCollectionMode) {
+            const { name, amount } = newEntry;
+            const res=await AddCollection({eventId,contributor: name, amount: Number(newEntry.amount)});
+            console.log(res)
+            if(res.data.success)
+              toast.success("Collection added successfully.");
+            else 
+              toast.success("something went wrong, failed to add...");
+        } else {
+            toast.success("Expense added successfully.");
+        }
+
+        // Reset form fields
+        setNewEntry({ name: "", amount: "", description: "" });
+    } catch (error) {
+        toast.error("Failed to save entry.");
+        console.error("Error saving entry:", error);
+    }
+};
+
 
   const columnDefs: ColDef<ICollection>[] = [
     {
@@ -63,12 +99,15 @@ const Events: React.FC = () => {
     {
       headerName: "Submitted to",
       field: "approved",
-      valueGetter: (params) => (params.data?.createdBy === user?.username ? "pending" : params.data?.approvedBy),
+      valueGetter: (params) =>
+        params.data?.createdBy === user?.username
+          ? "pending"
+          : params.data?.approvedBy,
       cellStyle: { textAlign: "center" },
       singleClickEdit: true,
     },
   ];
-  
+
   const expenseColumnDefs: ColDef<IExpense>[] = [
     {
       headerName: "Name",
@@ -85,7 +124,7 @@ const Events: React.FC = () => {
       headerName: "Spent By",
       field: "createdBy",
       cellStyle: { textAlign: "center" },
-    }
+    },
   ];
 
   return (
@@ -112,7 +151,10 @@ const Events: React.FC = () => {
         </p>
 
         <div className="flex justify-center items-center mt-4">
-          <ModeToggle isCollectionMode={isCollectionMode} setIsCollectionMode={setIsCollectionMode} />
+          <ModeToggle
+            isCollectionMode={isCollectionMode}
+            setIsCollectionMode={setIsCollectionMode}
+          />
         </div>
 
         <button
@@ -124,10 +166,12 @@ const Events: React.FC = () => {
       </div>
 
       <Table
-        data={isCollectionMode ? collection.data : expense.data} 
+        data={isCollectionMode ? collection.data : expense.data}
         coldefs={isCollectionMode ? columnDefs : expenseColumnDefs}
         currentUserName={user?.name || ""}
-        onSave={() => {}}
+        onSave={() => {
+          
+        }}
       />
 
       {isModalOpen && (
@@ -142,24 +186,33 @@ const Events: React.FC = () => {
             value={newEntry.name}
             onChange={(e) => setNewEntry({ ...newEntry, name: e.target.value })}
           />
-           {!isCollectionMode &&
-          <input
-           type="text"
-           placeholder="Description"
-           className="border p-2 w-full mt-2"
-           value={newEntry.name}
-           onChange={(e) => setNewEntry({ ...newEntry, description: e.target.value })}
-         />
-           
-          }
+          {!isCollectionMode && (
+            <input
+              type="text"
+              placeholder="Description"
+              className="border p-2 w-full mt-2"
+              value={newEntry.name}
+              onChange={(e) =>
+                setNewEntry({ ...newEntry, description: e.target.value })
+              }
+            />
+          )}
           <input
             type="number"
             placeholder="Amount"
             className="border p-2 w-full mt-2"
             value={newEntry.amount}
-            onChange={(e) => setNewEntry({ ...newEntry, amount: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "" || /^[0-9]*$/.test(value)) {
+                  setNewEntry((prev) => ({ ...prev, amount: value }));
+              }
+          }}
           />
-          <button onClick={handleSaveEntry} className="bg-gray-500 text-white px-4 py-2 rounded-lg mt-4">
+          <button
+            onClick={handleSaveEntry}
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg mt-4"
+          >
             Save
           </button>
         </Modal>
@@ -167,26 +220,36 @@ const Events: React.FC = () => {
     </div>
   );
 };
-const ModeToggle = ({ isCollectionMode, setIsCollectionMode }: { isCollectionMode: boolean; setIsCollectionMode: (value: boolean) => void }) => {
+const ModeToggle = ({
+  isCollectionMode,
+  setIsCollectionMode,
+}: {
+  isCollectionMode: boolean;
+  setIsCollectionMode: (value: boolean) => void;
+}) => {
   return (
-      <div className="flex items-center gap-2 p-2 bg-toggle-button-back dark:bg-gray-800 rounded-full">
-          <button
-              onClick={() => setIsCollectionMode(true)}
-              className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
-                  isCollectionMode ? "bg-blue-600 text-white" : "bg-transparent text-gray-600 dark:text-gray-300"
-              }`}
-          >
-              Collection
-          </button>
-          <button
-              onClick={() => setIsCollectionMode(false)}
-              className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
-                  !isCollectionMode ? "bg-blue-600 text-white" : "bg-transparent text-gray-600 dark:text-gray-300"
-              }`}
-          >
-              Expense
-          </button>
-      </div>
+    <div className="flex items-center gap-2 p-2 bg-toggle-button-back dark:bg-gray-800 rounded-full">
+      <button
+        onClick={() => setIsCollectionMode(true)}
+        className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
+          isCollectionMode
+            ? "bg-blue-600 text-white"
+            : "bg-transparent text-gray-600 dark:text-gray-300"
+        }`}
+      >
+        Collection
+      </button>
+      <button
+        onClick={() => setIsCollectionMode(false)}
+        className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
+          !isCollectionMode
+            ? "bg-blue-600 text-white"
+            : "bg-transparent text-gray-600 dark:text-gray-300"
+        }`}
+      >
+        Expense
+      </button>
+    </div>
   );
 };
 export default Events;

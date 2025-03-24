@@ -40,6 +40,8 @@ export const GetEventExpenses=(eventId: string)=>{
     const url=urls.getAllExpenses+eventId;
     return getClient().get(url);
 }
-
+export const AddCollection=(payload:{eventId:string, contributor:string, amount:number})=>{
+    return getClient().post(urls.addCollection,payload);
+}
 
 
