@@ -11,7 +11,7 @@ import Table from "../../components/Table";
 import { ColDef } from "ag-grid-community";
 import Modal from "../../components/Modal";
 import { toast } from "sonner";
-import { AddCollection } from "../../services/backend";
+import { AddCollection, AddExpense } from "../../services/backend";
 
 const Events: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,9 +22,10 @@ const Events: React.FC = () => {
   const [eventId, setEventId] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCollectionMode, setIsCollectionMode] = useState(true);
+  const [update, setUpdate] = useState(false);
   const [newEntry, setNewEntry] = useState<{
     name: string;
-    description?: String;
+    description?: string;
     amount: string;
   }>({ name: "", amount: "", description: "" });
 
@@ -39,7 +40,7 @@ const Events: React.FC = () => {
       dispatch(fetchCollections({ eventId }));
       dispatch(fetchExpenses({ eventId }));
     }
-  }, [eventId]);
+  }, [eventId, update]);
 
   const onSelect = (eventId: string) => {
     setEventId(eventId);
@@ -47,38 +48,48 @@ const Events: React.FC = () => {
 
   const handleSaveEntry = async () => {
     if (!newEntry.name || Number(newEntry.amount) <= 0) {
-        toast.error("Please provide a valid name and amount.");
-        return;
+      toast.error("Please provide a valid name and amount.");
+      return;
     }
 
     setIsModalOpen(false);
+    const { name, amount, description } = newEntry;
 
     try {
-        if (isCollectionMode) {
-            const { name, amount } = newEntry;
-            const res=await AddCollection({eventId,contributor: name, amount: Number(newEntry.amount)});
-            console.log(res)
-            if(res.data.success)
-              toast.success("Collection added successfully.");
-            else 
-              toast.success("something went wrong, failed to add...");
-        } else {
-            toast.success("Expense added successfully.");
-        }
+      if (isCollectionMode) {
+        const res = await AddCollection({
+          eventId,
+          contributor: name,
+          amount: Number(amount),
+        });
+        console.log(res);
+        if (res.data.success) toast.success("Collection added successfully.");
+        else toast.success("something went wrong, failed to add...");
+      } else {
+        const res = await AddExpense({
+          eventId,
+          name,
+          description: description || '',
+          amount: Number(amount),
+        });
+        console.log(res);
+        if (res.data.success) toast.success("Expense added successfully.");
+        else toast.success("something went wrong, failed to add...");
+      }
 
-        // Reset form fields
-        setNewEntry({ name: "", amount: "", description: "" });
+      // Reset form fields
+      setNewEntry({ name: "", amount: "", description: "" });
+      setUpdate(true);
     } catch (error) {
-        toast.error("Failed to save entry.");
-        console.error("Error saving entry:", error);
+      toast.error("Failed to save entry.");
+      console.error("Error saving entry:", error);
     }
-};
-
+  };
 
   const columnDefs: ColDef<ICollection>[] = [
     {
       headerName: "Name",
-      field: "contributor",
+      field: "name",
       cellStyle: { textAlign: "center" },
       singleClickEdit: true,
     },
@@ -100,9 +111,7 @@ const Events: React.FC = () => {
       headerName: "Submitted to",
       field: "approved",
       valueGetter: (params) =>
-        params.data?.createdBy === user?.username
-          ? "pending"
-          : params.data?.approvedBy,
+        params.data?.approvedBy || "pending",
       cellStyle: { textAlign: "center" },
       singleClickEdit: true,
     },
@@ -125,6 +134,12 @@ const Events: React.FC = () => {
       field: "createdBy",
       cellStyle: { textAlign: "center" },
     },
+    {
+      headerName: "Approved By",
+      field: "approvedBy",
+      valueFormatter: (params) => params.data?.approvedBy || "pending",
+      cellStyle: { textAlign: "center" },
+    },
   ];
 
   return (
@@ -135,7 +150,9 @@ const Events: React.FC = () => {
 
       <div className="bg-accent p-4 rounded-lg w-full max-w-md m-2">
         <h2 className="text-lg font-semibold">
-          Treasurer: <span>{selectedEvent?.eventManagement.treasurer}</span>
+          Treasurer: {selectedEvent?.eventManagement.treasurers.map((treasurer)=>(
+            <span>{treasurer}, </span>
+          ))}
         </h2>
         <p className="mt-2">
           Total Collection: <strong>₹{collection.totalCollection}</strong>
@@ -169,9 +186,7 @@ const Events: React.FC = () => {
         data={isCollectionMode ? collection.data : expense.data}
         coldefs={isCollectionMode ? columnDefs : expenseColumnDefs}
         currentUserName={user?.name || ""}
-        onSave={() => {
-          
-        }}
+        onSave={() => {}}
       />
 
       {isModalOpen && (
@@ -191,7 +206,7 @@ const Events: React.FC = () => {
               type="text"
               placeholder="Description"
               className="border p-2 w-full mt-2"
-              value={newEntry.name}
+              value={newEntry.description}
               onChange={(e) =>
                 setNewEntry({ ...newEntry, description: e.target.value })
               }
@@ -205,9 +220,9 @@ const Events: React.FC = () => {
             onChange={(e) => {
               const value = e.target.value;
               if (value === "" || /^[0-9]*$/.test(value)) {
-                  setNewEntry((prev) => ({ ...prev, amount: value }));
+                setNewEntry((prev) => ({ ...prev, amount: value }));
               }
-          }}
+            }}
           />
           <button
             onClick={handleSaveEntry}

@@ -1,4 +1,3 @@
-import Treasurer from "../Pages/dashboard/Treasurer";
 
 export const LANGUAGE_KEY='language';
 export const DEFAULT_PAGE_SIZE=10;

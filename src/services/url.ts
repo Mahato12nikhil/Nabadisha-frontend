@@ -10,5 +10,8 @@ export const urls={
     getEvents:'/api/v1/event/getAllEvents',
     getCollections:'/api/v1/event/get-collections?eventId=',
     getAllExpenses:'/api/v1/event/getAllExpenses?eventId=',
-    addCollection:'/api/v1/event/add-collection'
+    addCollection:'/api/v1/event/add-collection',
+    addExpense:'/api/v1/event/create-expense',
+    getPendingAmounts:'/api/v1/event/approvals/pendingAmounts?',
+    approveAmounts:'/api/v1/event/approvals/approveAmounts?'
 }

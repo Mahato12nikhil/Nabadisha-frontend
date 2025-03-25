@@ -13,7 +13,7 @@ export interface IEvent{
 }
 export interface IEventManagement{
     president:string,
-    treasurer:string,
+    treasurers:[],
     secretary:string,
     vice_president:string,
     vice_secretary:string
@@ -26,7 +26,7 @@ export interface GetAllEventsResponse{
 export interface ICollection{
     _id:string,
     eventId:string,
-    contributor:string,
+    name:string,
     amount:number,
     treasurer:string,
     approved:boolean,
@@ -47,12 +47,30 @@ export interface IExpense{
     eventId:string,
     name:string,
     amount:number,
-    createdBy:string
+    createdBy:string,
+    approved?:boolean,
+    approvedBy?:string
 }
 export interface GetEventExpensesResponse{
     success:boolean,
     data?:IExpense[],
     totalExpense?:number,
     currentUserExpense?:number,
+    message?:string,
+}
+
+export interface IPendingAmount{
+    _id:string,
+    name:string,
+    eventId:string,
+    description?:string,
+    amount:number,
+    amountType:string,
+    createdAt:number,
+    createdBy:string
+}
+export interface GetPendingAmountResponse{
+    success:boolean,
+    data?:IPendingAmount[],
     message?:string,
 }

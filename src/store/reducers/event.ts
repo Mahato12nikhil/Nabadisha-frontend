@@ -3,12 +3,14 @@ import {
   GetAllEventsResponse,
   GetEventCollectionResponse,
   GetEventExpensesResponse,
+  GetPendingAmountResponse,
   ICollection,
   IEvent,
   IExpense,
+  IPendingAmount,
 } from "../../definitions/event";
 import { RootState } from "../store";
-import { GetAllEvents, GetCollections, GetEventExpenses } from "../../services/backend";
+import { GetAllEvents, GetAllPendingAmounts, GetCollections, GetEventExpenses } from "../../services/backend";
 
 interface EventState {
   loading: boolean;
@@ -27,6 +29,9 @@ interface EventState {
     data: IExpense[];
     totalExpenses: number;
     currentUserExpense:number
+  };
+  pendingApproval: {
+    data: IPendingAmount[];
   };
 }
 
@@ -48,6 +53,9 @@ const initialState: EventState = {
     totalExpenses: 0,
     currentUserExpense:0
   },
+  pendingApproval:{
+    data: []
+  }
 };
 
 export const fetchEvents = createAsyncThunk<
@@ -90,6 +98,18 @@ export const fetchExpenses = createAsyncThunk<
   }
 });
 
+export const fetchPendingApprovals = createAsyncThunk<
+  GetPendingAmountResponse,
+  { eventId: string },
+  { state: RootState }
+>("/event/pending-approvals/fetch", async ({ eventId }, thunkApi) => {
+  try {
+    const response = await GetAllPendingAmounts({eventId});
+    return response.data;
+  } catch (err) {
+    return thunkApi.rejectWithValue("Failed to fetch pending approvals");
+  }
+});
 const eventSlice = createSlice({
   name: "eventSlice",
   initialState,
@@ -150,6 +170,22 @@ const eventSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
+
+      builder
+      .addCase(fetchPendingApprovals.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchPendingApprovals.fulfilled, (state, action) => {
+        if (action.payload.success) {
+          state.loading = false;
+          state.pendingApproval.data = action.payload.data || [];
+        }
+      })
+      .addCase(fetchPendingApprovals.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
   },
 });
 

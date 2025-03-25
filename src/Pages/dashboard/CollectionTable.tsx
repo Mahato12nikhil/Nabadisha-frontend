@@ -7,7 +7,6 @@ import {
   ClientSideRowModelModule,
   themeAlpine,
 } from "ag-grid-community";
-import { FiEdit2, FiCheck, FiX } from "react-icons/fi";
 interface ICollection {
   _id: string;
   eventId: string;

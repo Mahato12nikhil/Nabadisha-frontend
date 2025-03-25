@@ -43,5 +43,16 @@ export const GetEventExpenses=(eventId: string)=>{
 export const AddCollection=(payload:{eventId:string, contributor:string, amount:number})=>{
     return getClient().post(urls.addCollection,payload);
 }
+export const AddExpense=(payload:{eventId:string, name:string, description:string, amount:number})=>{
+    return getClient().post(urls.addExpense,payload);
+}
 
+export const GetAllPendingAmounts=(queries:{eventId:string})=>{
+    const url=urls.getPendingAmounts+"eventId="+queries.eventId;
+    return getClient().get(url);
+}
 
+export const ApprovePendingAmount=(queries:{id:string, amountType:string})=>{
+    const url=urls.approveAmounts+"id="+queries.id+"&&"+"amountType="+queries.amountType;
+    return getClient().get(url);
+}
