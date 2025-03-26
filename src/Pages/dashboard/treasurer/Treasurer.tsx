@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { fetchPendingApprovals } from "../../store/reducers/event";
-import EventSelector from "./EventSelector";
-import Table from "../../components/Table";
-import Modal from "../../components/Modal";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { fetchPendingApprovals } from "../../../store/reducers/event";
+import EventSelector from "../event/EventSelector";
+import Table from "../../../components/Table";
+import Modal from "../../../components/Modal";
 import { toast } from "sonner";
 import { ColDef } from "ag-grid-community";
-import { ApprovePendingAmount } from "../../services/backend";
+import { ApprovePendingAmount } from "../../../services/backend";
 
 const Treasurer: React.FC = () => {
   const { events, collection, expense, selectedEvent } = useAppSelector(

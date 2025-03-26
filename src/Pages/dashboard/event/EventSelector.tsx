@@ -7,11 +7,11 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import { IEvent } from "../../definitions/event";
+} from "../../../components/ui/select";
+import { IEvent } from "../../../definitions/event";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../store/store";
-import { setSelectedEvent } from "../../store/reducers/event";
+import { useAppDispatch } from "../../../store/store";
+import { setSelectedEvent } from "../../../store/reducers/event";
 
 interface EventProps {
   events: IEvent[];

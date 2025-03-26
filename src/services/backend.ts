@@ -1,3 +1,4 @@
+import { ICreateEvent } from "../definitions/event";
 import { LoginPayload } from "../definitions/user";
 import { RestService } from "./rest";
 import { baseUrl, urls } from "./url";
@@ -56,3 +57,7 @@ export const ApprovePendingAmount=(queries:{id:string, amountType:string})=>{
     const url=urls.approveAmounts+"id="+queries.id+"&&"+"amountType="+queries.amountType;
     return getClient().get(url);
 }
+export const CreateEvent=(payload:ICreateEvent )=>{
+    return getClient().post(urls.createEvent,payload);
+}
+

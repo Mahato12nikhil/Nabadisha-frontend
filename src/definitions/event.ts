@@ -1,76 +1,91 @@
-export interface IEvent{
-    _id:string,
-    name: string;
-    description:string,
-    eventImages:string[],
-    startDate: number;
-    endDate:number,
-    eventManagement: IEventManagement,
-    createdAt:number,
-    updatedAt:number,
-    createdBy:string,
-    updatedBy:string,
+export interface IEvent {
+  _id: string;
+  name: string;
+  description: string;
+  eventImages: string[];
+  startDate: number;
+  endDate: number;
+  eventManagement: IEventManagement;
+  createdAt: number;
+  updatedAt: number;
+  createdBy: string;
+  updatedBy: string;
 }
-export interface IEventManagement{
-    president:string,
-    treasurers:[],
-    secretary:string,
-    vice_president:string,
-    vice_secretary:string
+export interface IEventManagement {
+  president: string;
+  treasurers: [];
+  secretary: string;
+  vice_president: string;
+  vice_secretary: string;
 }
-export interface GetAllEventsResponse{
-    success:boolean,
-    data?:IEvent[],
-    message?:string
+export interface GetAllEventsResponse {
+  success: boolean;
+  data?: IEvent[];
+  message?: string;
 }
-export interface ICollection{
-    _id:string,
-    eventId:string,
-    name:string,
-    amount:number,
-    treasurer:string,
-    approved:boolean,
-    approvedBy?:string,
-    createdAt:number,
-    createdBy:string
+export interface ICollection {
+  _id: string;
+  eventId: string;
+  name: string;
+  amount: number;
+  treasurer: string;
+  approved: boolean;
+  approvedBy?: string;
+  createdAt: number;
+  createdBy: string;
 }
-export interface GetEventCollectionResponse{
-    success:boolean,
-    data?:ICollection[],
-    totalCount?:number,
-    totalCollection?:number,
-    currentUserCollection?:number,
-    message?:string,
+export interface GetEventCollectionResponse {
+  success: boolean;
+  data?: ICollection[];
+  totalCount?: number;
+  totalCollection?: number;
+  currentUserCollection?: number;
+  message?: string;
 }
-export interface IExpense{
-    _id:string,
-    eventId:string,
-    name:string,
-    amount:number,
-    createdBy:string,
-    approved?:boolean,
-    approvedBy?:string
+export interface IExpense {
+  _id: string;
+  eventId: string;
+  name: string;
+  amount: number;
+  createdBy: string;
+  approved?: boolean;
+  approvedBy?: string;
 }
-export interface GetEventExpensesResponse{
-    success:boolean,
-    data?:IExpense[],
-    totalExpense?:number,
-    currentUserExpense?:number,
-    message?:string,
+export interface GetEventExpensesResponse {
+  success: boolean;
+  data?: IExpense[];
+  totalExpense?: number;
+  currentUserExpense?: number;
+  message?: string;
 }
 
-export interface IPendingAmount{
-    _id:string,
-    name:string,
-    eventId:string,
-    description?:string,
-    amount:number,
-    amountType:string,
-    createdAt:number,
-    createdBy:string
+export interface IPendingAmount {
+  _id: string;
+  name: string;
+  eventId: string;
+  description?: string;
+  amount: number;
+  amountType: string;
+  createdAt: number;
+  createdBy: string;
 }
-export interface GetPendingAmountResponse{
-    success:boolean,
-    data?:IPendingAmount[],
-    message?:string,
+export interface GetPendingAmountResponse {
+  success: boolean;
+  data?: IPendingAmount[];
+  message?: string;
+}
+export interface ICreateEvent {
+  name: string;
+  description: string;
+  eventImages: string[];
+  status: string;
+  startDate: number;
+  endDate: number;
+  eventManagement: {
+    president: string;
+    treasurers: string[];
+    secretary: string;
+    vice_president: string;
+    vice_secretary: string;
+  };
 }

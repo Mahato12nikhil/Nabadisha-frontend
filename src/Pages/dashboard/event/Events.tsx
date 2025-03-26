@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
 import {
   fetchCollections,
   fetchExpenses,
   fetchEvents,
-} from "../../store/reducers/event";
+} from "../../../store/reducers/event";
 import EventSelector from "./EventSelector";
-import { ICollection, IExpense } from "../../definitions/event";
-import Table from "../../components/Table";
+import { ICollection, IExpense } from "../../../definitions/event";
+import Table from "../../../components/Table";
 import { ColDef } from "ag-grid-community";
-import Modal from "../../components/Modal";
+import Modal from "../../../components/Modal";
 import { toast } from "sonner";
-import { AddCollection, AddExpense } from "../../services/backend";
+import { AddCollection, AddExpense } from "../../../services/backend";
+import { ToggleSwitch } from "../../../components/ToggleSwitch";
 
 const Events: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -150,7 +151,7 @@ const Events: React.FC = () => {
 
       <div className="bg-accent p-4 rounded-lg w-full max-w-md m-2">
         <h2 className="text-lg font-semibold">
-          Treasurer: {selectedEvent?.eventManagement.treasurers.map((treasurer)=>(
+          Treasurer: {selectedEvent?.eventManagement.treasurers?.map((treasurer)=>(
             <span>{treasurer}, </span>
           ))}
         </h2>
@@ -168,9 +169,14 @@ const Events: React.FC = () => {
         </p>
 
         <div className="flex justify-center items-center mt-4">
-          <ModeToggle
+          {/* <ModeToggle
             isCollectionMode={isCollectionMode}
             setIsCollectionMode={setIsCollectionMode}
+          /> */}
+          <ToggleSwitch
+            options={["Collection", "Expense"]}
+            selectedOption={isCollectionMode}
+            setSelectedOption={setIsCollectionMode} 
           />
         </div>
 
@@ -235,7 +241,7 @@ const Events: React.FC = () => {
     </div>
   );
 };
-const ModeToggle = ({
+export const ModeToggle = ({
   isCollectionMode,
   setIsCollectionMode,
 }: {

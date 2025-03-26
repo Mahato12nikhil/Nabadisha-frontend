@@ -13,5 +13,6 @@ export const urls={
     addCollection:'/api/v1/event/add-collection',
     addExpense:'/api/v1/event/create-expense',
     getPendingAmounts:'/api/v1/event/approvals/pendingAmounts?',
-    approveAmounts:'/api/v1/event/approvals/approveAmounts?'
+    approveAmounts:'/api/v1/event/approvals/approveAmounts?',
+    createEvent:'/api/v1/event/create-event'
 }
