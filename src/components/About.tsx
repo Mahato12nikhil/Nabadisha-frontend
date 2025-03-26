@@ -3,13 +3,14 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { fetchAboutContent } from '../store/reducers/section';
 import { useLanguage } from '../hooks/LanguageProvider';
+import abouts from '../../MockData/about.json';
 
 const About: React.FC = () => {
 
-    const {about} =useAppSelector((state)=>state.section)
+    const { about: aboutContent } = useAppSelector((state) => state.section);
     const dispatch=useAppDispatch();
     const {language}=useLanguage()
-    const langKey = language as keyof typeof about.content;
+    const langKey = language as keyof typeof aboutContent.content;
 
     useEffect(()=>{
         dispatch(fetchAboutContent());
@@ -20,7 +21,7 @@ const About: React.FC = () => {
             <h1 className="text-2xl mb-5">| About us</h1>
 
             <p className="text-lg leading-relaxed select-none">
-                <span>{about?.content[langKey].journey.split(" ").slice(0,3).join(" ")}</span> {about?.content[langKey].journey.split(" ").slice(3).join(" ")} 
+                <span>{abouts?.data.content[langKey].journey.split(" ").slice(0, 3).join(" ")}</span> {abouts?.data.content[langKey].journey.split(" ").slice(3).join(" ")}
             </p>
             <img 
                 src={img} 
@@ -29,11 +30,11 @@ const About: React.FC = () => {
             />
             <br/>
             <p className="text-lg leading-relaxed select-none">
-                {about?.content[langKey].vision}
+                {abouts.data?.content[langKey].vision}
                 <br /><br />
-                {about?.content[langKey].mission}                
+                {abouts.data?.content[langKey].mission}
                 <br /><br />
-                {about?.content[langKey].commitment}
+                {abouts.data?.content[langKey].commitment}
             </p>
         </section>
     );
