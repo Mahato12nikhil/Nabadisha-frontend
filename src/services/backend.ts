@@ -6,7 +6,7 @@ import { baseUrl, urls } from "./url";
 const serviceClient=new RestService({baseURL:baseUrl});
 const getClient=()=>serviceClient.client;
 
-const localClient=new RestService({baseURL:"http://bnpnabadisha.in"});
+const localClient=new RestService({baseURL:"https://www.bnpnabadisha.in/"});
 const getLocalClient=()=>localClient.client;
 
 
