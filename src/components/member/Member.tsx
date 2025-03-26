@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import MemberCard from "./MemberCard";
 import { fetchMembers } from "../../store/reducers/member";
-import { useAppDispatch, useAppSelector } from "../../store/store";
+import { useAppDispatch } from "../../store/store";
 
 import members from '../../../MockData/members.json'
 const Member: React.FC =()=>{

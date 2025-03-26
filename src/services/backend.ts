@@ -1,12 +1,12 @@
 import { ICreateEvent } from "../definitions/event";
-import { LoginPayload } from "../definitions/user";
+import { ICreateUser, LoginPayload } from "../definitions/user";
 import { RestService } from "./rest";
 import { baseUrl, urls } from "./url";
 
 const serviceClient=new RestService({baseURL:baseUrl});
 const getClient=()=>serviceClient.client;
 
-const localClient=new RestService({baseURL:"http://localhost:5173"});
+const localClient=new RestService({baseURL:"http://bnpnabadisha.in"});
 const getLocalClient=()=>localClient.client;
 
 
@@ -61,3 +61,6 @@ export const CreateEvent=(payload:ICreateEvent )=>{
     return getClient().post(urls.createEvent,payload);
 }
 
+export const CreateUser=(payload:ICreateUser )=>{
+    return getClient().post(urls.createUser,payload);
+}

@@ -8,7 +8,6 @@ import {
 } from "../../components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Social from "../Social";
-import { IUser } from "../../definitions/user";
 
 interface IMember{
   _id:string,

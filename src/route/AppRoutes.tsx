@@ -4,9 +4,10 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import Layout from "../components/Layout";
 import Home from "../Pages/Home";
 import DashBoard from "../Pages/dashboard/DashBoard";
+import LegalInfo from "../Pages/LegalInfo";
 
 
-type RoutePath= "/" | "/account" | "/login" | "/activities" | "/settings" | "/treasurer" | "/admin" | "/dashboard";
+type RoutePath= "/" | "/account" | "/login" | "/activities" | "/settings" | "/treasurer" | "/admin" | "/dashboard" | "/legal_contact";
 
 
 export interface RouteProps<T>{
@@ -17,7 +18,8 @@ export const routes: RouteProps<RoutePath>[]=[
     {path: "/", element: <Layout/> },
     {path: "/account", element: <Account/> },
     {path: "/login", element: <Login/> }, 
-    {path:"/dashboard", element: <DashBoard/>}
+    {path:"/dashboard", element: <DashBoard/>},
+    {path:"/legal_contact", element: <LegalInfo/>}
 ]
    
 

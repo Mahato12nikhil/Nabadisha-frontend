@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ICollection, IExpense } from "../definitions/event";
-import { CellValueChangedEvent, ColDef, GridReadyEvent, themeAlpine, themeBalham, themeQuartz } from "ag-grid-community";
+import { CellValueChangedEvent, ColDef, GridReadyEvent, themeBalham } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { CellStyleModule, ClientSideRowModelModule, ColumnAutoSizeModule, ModuleRegistry, NumberEditorModule, NumberFilterModule, PaginationModule, QuickFilterModule, TextEditorModule, TextFilterModule, ValidationModule } from "ag-grid-community";
 
@@ -32,11 +32,11 @@ const Table: React.FC<TableProps> = ({
   console.log(data.at(0))
   const gridRef = useRef<AgGridReact<ICollection | IExpense>>(null);
   const [quickFilterText, setQuickFilterText] = useState<string>("");
-  const [isGridReady, setIsGridReady] = useState<boolean>(false);
+  // const [isGridReady, setIsGridReady] = useState<boolean>(false);
 
   const onGridReady = useCallback((params: GridReadyEvent) => {
     params.api.sizeColumnsToFit();
-    setIsGridReady(true);
+    // setIsGridReady(true);
   }, []);
 
   const onQuickFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {

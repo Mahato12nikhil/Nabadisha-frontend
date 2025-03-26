@@ -1,4 +1,4 @@
-export const baseUrl='http://localhost:5090'
+export const baseUrl='https://nabadisha-backend-new.onrender.com'
 
 export const urls={
     sections:'/MockData/sections.json',
@@ -14,5 +14,6 @@ export const urls={
     addExpense:'/api/v1/event/create-expense',
     getPendingAmounts:'/api/v1/event/approvals/pendingAmounts?',
     approveAmounts:'/api/v1/event/approvals/approveAmounts?',
-    createEvent:'/api/v1/event/create-event'
+    createEvent:'/api/v1/event/create-event',
+    createUser:'/api/v1/user/createUser'
 }

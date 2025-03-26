@@ -9,7 +9,7 @@ import { ColDef } from "ag-grid-community";
 import { ApprovePendingAmount } from "../../../services/backend";
 
 const Treasurer: React.FC = () => {
-  const { events, collection, expense, selectedEvent } = useAppSelector(
+  const { events } = useAppSelector(
     (state) => state.event
   );
   const dispatch = useAppDispatch();
