@@ -71,33 +71,6 @@ export const fetchEvents = createAsyncThunk<
   }
 });
 
-export const fetchCollections = createAsyncThunk<
-  GetEventCollectionResponse,
-  { eventId: string },
-  { state: RootState }
->("/event/collection/fetch", async ({ eventId }, thunkApi) => {
-  try {
-    const { pageSize } = thunkApi.getState().event.collection;
-    const response = await GetCollections(eventId, 0, pageSize);
-    return response.data;
-  } catch (err) {
-    return thunkApi.rejectWithValue("Failed to fetch collections");
-  }
-});
-
-export const fetchExpenses = createAsyncThunk<
-  GetEventExpensesResponse,
-  { eventId: string },
-  { state: RootState }
->("/event/expense/fetch", async ({ eventId }, thunkApi) => {
-  try {
-    const response = await GetEventExpenses(eventId);
-    return response.data;
-  } catch (err) {
-    return thunkApi.rejectWithValue("Failed to fetch expenses");
-  }
-});
-
 export const fetchPendingApprovals = createAsyncThunk<
   GetPendingAmountResponse,
   { eventId: string },
@@ -110,6 +83,26 @@ export const fetchPendingApprovals = createAsyncThunk<
     return thunkApi.rejectWithValue("Failed to fetch pending approvals");
   }
 });
+
+export const fetchEventData = createAsyncThunk<
+  { collections: GetEventCollectionResponse; expenses: GetEventExpensesResponse },
+  { eventId: string },
+  { state: RootState }
+>("/event/data/fetch", async ({ eventId }, thunkApi) => {
+  try {
+    const { pageSize } = thunkApi.getState().event.collection;
+
+    const [collections, expenses] = await Promise.all([
+      GetCollections(eventId, 0, pageSize),
+      GetEventExpenses(eventId),
+    ]);
+
+    return { collections: collections.data, expenses: expenses.data };
+  } catch (err) {
+    return thunkApi.rejectWithValue("Failed to fetch event data");
+  }
+});
+
 const eventSlice = createSlice({
   name: "eventSlice",
   initialState,
@@ -126,47 +119,11 @@ const eventSlice = createSlice({
       .addCase(
         fetchEvents.fulfilled,
         (state, action: PayloadAction<GetAllEventsResponse>) => {
-          state.loading = false;
           if (action.payload.data) state.events = action.payload.data || [];
+          state.loading = false;
         }
       )
       .addCase(fetchEvents.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
-
-    builder
-      .addCase(fetchCollections.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchCollections.fulfilled, (state, action) => {
-        if (action.payload.success) {
-          state.loading = false;
-          state.collection.totalCount = action.payload.totalCount || 0;
-          state.collection.data = action.payload.data || [];
-          state.collection.totalCollection = action.payload.totalCollection || 0;
-          state.collection.currentUserCollection = action.payload.currentUserCollection || 0;
-          state.collection.pageIndex = state.collection.pageIndex + 1;
-        }
-      })
-      .addCase(fetchCollections.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
-
-    builder
-      .addCase(fetchExpenses.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchExpenses.fulfilled, (state, action) => {
-        if (action.payload.success) {
-          state.loading = false;
-          state.expense.data = action.payload.data || [];
-          state.expense.totalExpenses = action.payload.totalExpense || 0;
-          state.expense.currentUserExpense = action.payload.currentUserExpense || 0;
-        }
-      })
-      .addCase(fetchExpenses.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
@@ -177,15 +134,40 @@ const eventSlice = createSlice({
       })
       .addCase(fetchPendingApprovals.fulfilled, (state, action) => {
         if (action.payload.success) {
-          state.loading = false;
           state.pendingApproval.data = action.payload.data || [];
+          state.loading = false;
         }
       })
       .addCase(fetchPendingApprovals.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
-
+      builder
+      .addCase(fetchEventData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchEventData.fulfilled, (state, action) => {
+        const { collections, expenses } = action.payload;
+        
+        if (collections.success) {
+          state.collection.totalCount = collections.totalCount || 0;
+          state.collection.data = collections.data || [];
+          state.collection.totalCollection = collections.totalCollection || 0;
+          state.collection.currentUserCollection = collections.currentUserCollection || 0;
+        }
+    
+        if (expenses.success) {
+          state.expense.data = expenses.data || [];
+          state.expense.totalExpenses = expenses.totalExpense || 0;
+          state.expense.currentUserExpense = expenses.currentUserExpense || 0;
+        }
+    
+        state.loading = false;
+      })
+      .addCase(fetchEventData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

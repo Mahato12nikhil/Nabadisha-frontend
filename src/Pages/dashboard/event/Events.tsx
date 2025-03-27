@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import {
-  fetchCollections,
-  fetchExpenses,
   fetchEvents,
+  fetchEventData,
 } from "../../../store/reducers/event";
 import EventSelector from "./EventSelector";
 import { ICollection, IExpense } from "../../../definitions/event";
@@ -13,10 +12,11 @@ import Modal from "../../../components/Modal";
 import { toast } from "sonner";
 import { AddCollection, AddExpense } from "../../../services/backend";
 import { ToggleSwitch } from "../../../components/ToggleSwitch";
+import Loader from "../../../components/ui/loader";
 
 const Events: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { events, collection, expense, selectedEvent } = useAppSelector(
+  const { events, collection, expense, selectedEvent, loading } = useAppSelector(
     (state) => state.event
   );
   const { user } = useAppSelector((state) => state.user);
@@ -38,8 +38,7 @@ const Events: React.FC = () => {
 
   useEffect(() => {
     if (eventId) {
-      dispatch(fetchCollections({ eventId }));
-      dispatch(fetchExpenses({ eventId }));
+      dispatch(fetchEventData({ eventId }));
     }
   }, [eventId, update]);
 
@@ -144,12 +143,14 @@ const Events: React.FC = () => {
   ];
 
   return (
-    <div className="w-full flex flex-col items-center mt-5 space-y-4">
+    <div className="w-full flex flex-col items-center mt-5 space-y-4 relative">
       <div className="w-60">
         <EventSelector events={events} onSelect={onSelect} />
       </div>
 
-      <div className="bg-accent p-4 rounded-lg w-full max-w-md m-2">
+      <div className="bg-accent p-4 rounded-lg w-full max-w-md m-2 relative">
+      {loading && <Loader/>}
+
         <h2 className="text-lg font-semibold">
           Treasurer: {selectedEvent?.eventManagement.treasurers?.map((treasurer)=>(
             <span>{treasurer}, </span>
@@ -169,10 +170,6 @@ const Events: React.FC = () => {
         </p>
 
         <div className="flex justify-center items-center mt-4">
-          {/* <ModeToggle
-            isCollectionMode={isCollectionMode}
-            setIsCollectionMode={setIsCollectionMode}
-          /> */}
           <ToggleSwitch
             options={["Collection", "Expense"]}
             selectedOption={isCollectionMode}
@@ -241,36 +238,5 @@ const Events: React.FC = () => {
     </div>
   );
 };
-export const ModeToggle = ({
-  isCollectionMode,
-  setIsCollectionMode,
-}: {
-  isCollectionMode: boolean;
-  setIsCollectionMode: (value: boolean) => void;
-}) => {
-  return (
-    <div className="flex items-center gap-2 p-2 bg-toggle-button-back dark:bg-gray-800 rounded-full">
-      <button
-        onClick={() => setIsCollectionMode(true)}
-        className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
-          isCollectionMode
-            ? "bg-blue-600 text-white"
-            : "bg-transparent text-gray-600 dark:text-gray-300"
-        }`}
-      >
-        Collection
-      </button>
-      <button
-        onClick={() => setIsCollectionMode(false)}
-        className={`px-4 py-1 rounded-full text-sm font-medium transition-colors ${
-          !isCollectionMode
-            ? "bg-blue-600 text-white"
-            : "bg-transparent text-gray-600 dark:text-gray-300"
-        }`}
-      >
-        Expense
-      </button>
-    </div>
-  );
-};
+
 export default Events;

@@ -76,14 +76,12 @@ const CreateUpdateUser = () => {
         uploadedImageUrl = await handleImageUpload();
       }
 
-      // Remove confirmPassword before sending data
       const { confirmPassword, ...payload } = { ...userData, userPic: uploadedImageUrl };
 
       let res;
       if (mode === MODES.CREATE) {
         res = await CreateUser(payload);
       } else {
-        // Placeholder for future update logic
         toast.info("Update functionality to be implemented.");
         return;
       }

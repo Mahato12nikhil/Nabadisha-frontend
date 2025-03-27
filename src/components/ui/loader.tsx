@@ -1,29 +1,20 @@
-import { useState, CSSProperties } from "react";
+import { useState } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 
-const override: CSSProperties = {
-  display: "block",
-  margin: "0 auto",
-  borderColor: "red",
-};
-
 function Loader() {
-  let [loading, setLoading] = useState(true);
-  let [color, setColor] = useState("#ffffff");
+  const [loading] = useState(true);
 
   return (
-    <div className="sweet-loading">
-      <button onClick={() => setLoading(!loading)}>Toggle Loader</button>
-      <input value={color} onChange={(input) => setColor(input.target.value)} placeholder="Color of the loader" />
-
-      <BeatLoader
-        color={color}
-        loading={loading}
-        cssOverride={override}
-        size={30}
-        aria-label="Loading Spinner"
-        data-testid="loader"
-      />
+    <div className="absolute left-1/2 -translate-x-1/2 z-50  w-full h-full flex items-center justify-center bg-trasparent/20">
+      <div className="animate-pulse flex justify-center">
+        <BeatLoader
+          color="var(--color-primary)" 
+          loading={loading}
+          size={15}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
     </div>
   );
 }

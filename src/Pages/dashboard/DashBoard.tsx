@@ -10,10 +10,10 @@ import Loader from "../../components/ui/loader";
 import { dashboardMenu } from "../../store/reducers/dashboard";
 import { IUser } from "../../definitions/user";
 
-export type SectionType="event" | "treasurer" | "admin";
+export type SectionType = "event" | "treasurer" | "admin";
 
 const DashBoard: React.FC = () => {
-  const { isLoggedIn, user } = useAppSelector((state) => state.user);
+  const { user, error, loading } = useAppSelector((state) => state.user);
   const { dashMenu } = useAppSelector((state) => state.dashboard);
   const [currentSection, setCurrentSection] = useState<string>("event");
 
@@ -22,36 +22,40 @@ const DashBoard: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (user) {
-        dispatch(dashboardMenu({ roles: user.roles }));
-    } else {
-       //if not logged in, try to renew the login
-      const refreshToken = GetFromLocalStorage(REFRESH_TOKEN);
-      if (refreshToken) {
-        dispatch(renewLogin({ refreshToken }));
-      } else {
-        //if no refresh token, navigate to login page
-        navigate("/login", { state: { from: location } });
-      }
+    const refreshToken = GetFromLocalStorage(REFRESH_TOKEN);
+    if (error) {
+      navigate("/login", { state: { from: location } });
     }
-  }, [user]);
+    if (user) {
+      dispatch(dashboardMenu({ roles: user.roles }));
+    } else if (refreshToken) {
+      //if not logged in, try to renew the login
+      dispatch(renewLogin({ refreshToken }));
+    } else {
+      //if no refresh token, navigate to login page
+      navigate("/login", { state: { from: location } });
+    }
+  }, [user, error]);
 
-  const updateSection=(section: string)=>{
-    if(section)setCurrentSection(section);
-  }
+  const updateSection = (section: string) => {
+    if (section) setCurrentSection(section);
+  };
 
   return (
-    <>
-      {isLoggedIn ? (
-        <div className="flex flex-col justify-center items-center pb-5 pt-5 bg-accent">
+    <div className="flex flex-col min-h-screen justify-center items-center pb-5 pt-5 bg-accent">
+      {user && (
+        <>
           <ProfileSection user={user} />
-          <DashBoardHeader menu={dashMenu} onClick={updateSection} section={currentSection}/>
-          <DashBoardContent section={currentSection}/>
-        </div>
-      ) : (
-        <Loader />
+          <DashBoardHeader
+            menu={dashMenu}
+            onClick={updateSection}
+            section={currentSection}
+          />
+          <DashBoardContent section={currentSection} />
+        </>
       )}
-    </>
+      {loading && <Loader/>}
+    </div>
   );
 };
 const ProfileSection: React.FC<{ user: IUser | undefined }> = ({ user }) => {

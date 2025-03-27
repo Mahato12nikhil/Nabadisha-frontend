@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { login } from "../store/reducers/user";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Loader from "../components/ui/loader";
 
 const FormSchema = z.object({
   username: z.string().min(5, {
@@ -32,7 +33,7 @@ const Login: React.FC = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
-  const {user}=useAppSelector(state=>state.user);
+  const {user, loading}=useAppSelector(state=>state.user);
 
   const dispatch=useAppDispatch();
 
@@ -55,7 +56,7 @@ const Login: React.FC = () => {
   }, [user, navigate, from]);
 
   return (
-    <div className="flex items-center justify-center pt-5">
+    <div className="flex items-center min-h-screen justify-center pt-5 relative">
       <Card className="w-[80%] max-w-md shadow-lg">
         <CardContent className="pl-10 pr-10">
           <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
@@ -99,6 +100,7 @@ const Login: React.FC = () => {
           </Form>
         </CardContent>
       </Card>
+      {loading && <Loader/>}
     </div>
   );
 };
