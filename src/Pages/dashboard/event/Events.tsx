@@ -59,7 +59,7 @@ const Events: React.FC = () => {
       if (isCollectionMode) {
         const res = await AddCollection({
           eventId,
-          contributor: name,
+          name,
           amount: Number(amount),
         });
         console.log(res);
