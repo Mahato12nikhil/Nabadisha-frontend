@@ -40,7 +40,7 @@ const ContentSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchContents.fulfilled, (state, action) => {
       state.contents = action.payload.data || [];
-      action.payload.data?.map((content, index)=>{
+      action.payload.data?.map((content)=>{
 
         if(content.section===CONTENT_ABOUT){
           state.about=content
