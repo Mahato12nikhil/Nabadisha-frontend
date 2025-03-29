@@ -8,6 +8,7 @@ interface UserState {
   isLoggedIn?: boolean;
   loading: boolean;
   error?: string;
+  loginError?:string,
   user?: IUser;
   token?:string
   refreshToken?:string
@@ -27,7 +28,8 @@ export const login = createAsyncThunk<GetLoginResponse, LoginPayload, { rejectVa
       const { data } = await Login(credentials);
       return data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.message || "Login failed");
+      const errormessage=error.response?.data?.message || "Login failed";
+      return thunkApi.rejectWithValue(errormessage|| "Login failed");
     }
   }
 );
@@ -66,7 +68,7 @@ const UserSlice = createSlice({
       })
       .addCase(login.rejected, (state, action: PayloadAction<string | undefined>) => {
         state.loading = false;
-        state.error = action.payload || "An error occurred";
+        state.loginError=action.payload || "An error occurred";
       });
 
       builder.addCase(renewLogin.pending, (state) => {

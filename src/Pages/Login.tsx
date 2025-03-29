@@ -33,7 +33,7 @@ const Login: React.FC = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
-  const {user, loading}=useAppSelector(state=>state.user);
+  const {user, loading, loginError}=useAppSelector(state=>state.user);
 
   const dispatch=useAppDispatch();
 
@@ -95,6 +95,9 @@ const Login: React.FC = () => {
                   </FormItem>
                 )}
               />
+               {loginError && (
+                <p className="text-red-500 text-sm text-center">{loginError}</p>
+              )}
               <Button type="submit" className="w-full">Login</Button>
             </form>
           </Form>
