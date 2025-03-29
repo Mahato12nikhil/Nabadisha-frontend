@@ -1,11 +1,11 @@
-export const baseUrl='https://nabadisha-backend-new.onrender.com' 
-//export const baseUrl='http://localhost:5090' 
+//export const baseUrl='https://nabadisha-backend-new.onrender.com' 
+export const baseUrl='http://localhost:5090' 
 
 
 export const urls={
     sections:'/MockData/sections.json',
     about:'/MockData/about.json',
-    members:'/MockData/members.json',
+    members:'/api/v1/user/getAllUsers',
     login:'/api/v1/user/login',
     renewLogin: '/api/v1/user/renewLogin',
     dashMenu:'/api/v1/dashboard/dashmenu',

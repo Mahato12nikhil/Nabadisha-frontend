@@ -30,7 +30,7 @@ export interface IUser {
 
 export interface GetMembersResponse {
   success: boolean;
-  data: IUser;
+  users: IUser[];
 }
 export interface GetLoginResponse {
   success: boolean;

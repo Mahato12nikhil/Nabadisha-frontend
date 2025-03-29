@@ -16,7 +16,7 @@ export const GetAboutContent=()=>{
 }
 
 export const GetMembers=()=>{
-    return getLocalClient().get(urls.members);
+    return getClient().get(urls.members);
 }
 
 export const Login=(payload:LoginPayload)=>{

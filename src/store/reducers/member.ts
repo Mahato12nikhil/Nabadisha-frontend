@@ -1,11 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { GetMembers } from "../../services/backend";
 import { RootState } from "../store";
-import { IUser } from "../../definitions/user";
+import { GetMembersResponse, IUser } from "../../definitions/user";
 
-const initialState: IUser[] = [];
+interface MemberStateType{
+  members:IUser[]
+}
+const initialState:MemberStateType = {
+  members:[]
+};
 
-export const fetchMembers = createAsyncThunk<IUser[], void, { state: RootState }>(
+export const fetchMembers = createAsyncThunk<GetMembersResponse, void, { state: RootState }>(
   "/member/get",
   async (_, thunkApi) => {
     try {
@@ -23,8 +28,8 @@ const memberSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMembers.fulfilled, (_, action: PayloadAction<IUser[]>) => {
-        return action.payload; 
+      .addCase(fetchMembers.fulfilled, (state, action) => {
+        state.members = action.payload.users; 
       })
       .addCase(fetchMembers.rejected, (_, action) => {
         console.error(action.payload);

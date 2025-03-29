@@ -1,27 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import MemberCard from "./MemberCard";
 import { fetchMembers } from "../../store/reducers/member";
-import { useAppDispatch } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { IUser } from "../../definitions/user";
 
-import members from '../../../MockData/members.json'
-const Member: React.FC =()=>{
-    const dispatch=useAppDispatch()
-    //const members=useAppSelector(state=>state.member)
+const shuffleArray = (array: IUser[]) => {
+  return [...array].sort(() => Math.random() - 0.5);
+};
 
-    
-    useEffect(()=>{
-        dispatch(fetchMembers());
-      },[])
+const Member: React.FC = () => {
+  const { members } = useAppSelector((state) => state.member);
+  const dispatch = useAppDispatch();
 
-    return (
-        <section className="p-6  w-full">
+  useEffect(() => {
+    dispatch(fetchMembers());
+  }, [dispatch]);
 
-            <h2 className="text-2xl mb-5">| Meet us</h2>
-            <div className="w-full flex flex-row items-center justify-center">
-                <MemberCard members={members.data}/>
-            </div>
-           
-        </section>
-    )
-}
+  const shuffledMembers = useMemo(() => shuffleArray(members), [members]);
+
+  return (
+    <section className="p-6 w-full">
+      <h2 className="text-2xl mb-5">| Meet us</h2>
+      <div className="w-full flex flex-row items-center justify-center">
+        <MemberCard members={shuffledMembers} />
+      </div>
+    </section>
+  );
+};
+
 export default Member;

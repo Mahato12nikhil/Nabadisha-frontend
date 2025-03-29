@@ -8,23 +8,12 @@ import {
 } from "../../components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Social from "../Social";
+import { IUser } from "../../definitions/user";
 
-interface IMember{
-  _id:string,
-  name: string,
-  username: string,
-  role:string,
-  userpic:string,
-  social:{
-      facebook?:string,
-      instagram?:string,
-      linkedin?:string,
-      youtube?:string
-  }
-}
+
 
 interface MemberCardProps {
-  members: IMember[];
+  members: IUser[];
 }
 
 
@@ -50,7 +39,7 @@ const MemberCard :React.FC<MemberCardProps> = ({members} ) => {
                 <CardContent className="flex flex-col h-full h-60  p-0">
                   <div className="h-[70%] w-full">
                     <img 
-                      src={member.userpic}
+                      src={member.userPic}
                       className="w-full h-full object-cover object-top rounded-tl-lg rounded-tr-lg" 
                       alt="Member" 
                       onError={(e) => console.error("Image failed to load", e)}
@@ -60,7 +49,7 @@ const MemberCard :React.FC<MemberCardProps> = ({members} ) => {
                   <div className="h-[30%] w-full flex flex-col items-center justify-between  rounded-b-lg">
                     <span>{member?.name}</span>
                     <div className="p-2">
-                      <Social socials={member.social} onSocialClick={onSocialClick}/>
+                      <Social socials={member.socials} onSocialClick={onSocialClick}/>
                     </div>
                   </div>
                 </CardContent>
