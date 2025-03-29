@@ -12,11 +12,7 @@ export interface ICreateUser {
   isActive: true;
   userPic: string;
   roles: string[];
-  socials: {
-    facebook: string;
-    instagram: string;
-    linkedin: string;
-  };
+  socials: { [key: string]: string }; 
 }
 export interface IUser {
   name: string;

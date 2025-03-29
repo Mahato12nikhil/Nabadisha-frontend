@@ -5,13 +5,14 @@ import { storage } from "../../../firebase";
 import { toast } from "sonner";
 import { ICreateUser } from "../../../definitions/user";
 import { ToggleSwitch } from "../../../components/ToggleSwitch";
+import ProfileImageCropper from "../../../components/ProfileImageCropper";
 
 const MODES = {
   CREATE: "Create",
   UPDATE: "Update",
 };
 
-const ROLES = ["admin", "member", "treasurer"]; 
+const ROLES = ["admin", "member", "treasurer"];
 
 const CreateUpdateUser = () => {
   const [mode, setMode] = useState<string>(MODES.CREATE);
@@ -22,17 +23,27 @@ const CreateUpdateUser = () => {
     confirmPassword: "",
     phone: "",
     isActive: true,
-    userPic: "", // Optional
+    userPic: "",
     roles: [],
-    socials: { facebook: "", instagram: "", linkedin: "" }, // Optional
+    socials: { facebook: "", instagram: "", linkedin: "" },
   });
 
   const [userImage, setUserImage] = useState<File | null>(null);
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null); // ✅ Added preview image state
+  const [cropperOpen, setCropperOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+    if (["facebook", "instagram", "linkedin"].includes(name)) {
+      setUserData((prev) => ({
+        ...prev,
+        socials: { ...prev.socials, [name]: value },
+      }));
+    } else {
+      setUserData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleRoleChange = (role: string) => {
@@ -45,10 +56,14 @@ const CreateUpdateUser = () => {
   };
 
   const handleImageUpload = async () => {
-    if (!userImage) return "";
+    if (!croppedImage) return "";
 
-    const storageRef = ref(storage, `users/${userImage.name}`);
-    const snapshot = await uploadBytes(storageRef, userImage);
+    const response = await fetch(croppedImage);
+    const blob = await response.blob();
+    const file = new File([blob], `cropped_${userImage?.name || "image"}.jpg`, { type: "image/jpeg" });
+
+    const storageRef = ref(storage, `users/${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
     return await getDownloadURL(snapshot.ref);
   };
 
@@ -72,7 +87,7 @@ const CreateUpdateUser = () => {
       setLoading(true);
       let uploadedImageUrl = userData.userPic || "";
 
-      if (userImage) {
+      if (croppedImage) {
         uploadedImageUrl = await handleImageUpload();
       }
 
@@ -100,6 +115,8 @@ const CreateUpdateUser = () => {
           socials: { facebook: "", instagram: "", linkedin: "" },
         });
         setUserImage(null);
+        setCroppedImage(null);
+        setPreviewImage(null); // Reset preview after submit
       } else {
         toast.error(`Failed to ${mode === MODES.CREATE ? "create" : "update"} user.`);
       }
@@ -111,6 +128,17 @@ const CreateUpdateUser = () => {
     }
   };
 
+  // Handle file selection and image preview
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setUserImage(file);
+      setPreviewImage(imageUrl); // Set preview image
+      setCropperOpen(true);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center mt-5 space-y-4 px-4 md:px-0">
       <h2 className="text-xl font-semibold">
@@ -119,122 +147,67 @@ const CreateUpdateUser = () => {
 
       <ToggleSwitch options={[MODES.CREATE, MODES.UPDATE]} selectedOption={mode} setSelectedOption={setMode} />
 
-      <input
-        type="text"
-        name="name"
-        placeholder="Full Name"
-        value={userData.name}
-        onChange={handleChange}
-        className="border p-2 w-full max-w-md rounded-md"
-      />
+      <input type="text" name="name" placeholder="Full Name" value={userData.name} onChange={handleChange} className="border p-2 w-full max-w-md rounded-md" />
 
-      <input
-        type="text"
-        name="username"
-        placeholder="Username"
-        value={userData.username}
-        onChange={handleChange}
-        className="border p-2 w-full max-w-md rounded-md"
-      />
+      <input type="text" name="username" placeholder="Username" value={userData.username} onChange={handleChange} className="border p-2 w-full max-w-md rounded-md" />
 
       {mode === MODES.CREATE && (
         <>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={userData.password}
-            onChange={handleChange}
-            className="border p-2 w-full max-w-md rounded-md"
-          />
-
-          <input
-            type="text"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={userData.confirmPassword}
-            onChange={handleChange}
-            className="border p-2 w-full max-w-md rounded-md"
-          />
+          <input type="password" name="password" placeholder="Password" value={userData.password} onChange={handleChange} className="border p-2 w-full max-w-md rounded-md" />
+          <input type="password" name="confirmPassword" placeholder="Confirm Password" value={userData.confirmPassword} onChange={handleChange} className="border p-2 w-full max-w-md rounded-md" />
         </>
       )}
 
-      <input
-        type="text"
-        name="phone"
-        placeholder="Phone Number"
-        value={userData.phone}
-        onChange={handleChange}
-        className="border p-2 w-full max-w-md rounded-md"
-      />
+      <input type="text" name="phone" placeholder="Phone Number" value={userData.phone} onChange={handleChange} className="border p-2 w-full max-w-md rounded-md" />
 
+      {/* Roles Section */}
+      <div className="flex flex-col w-full max-w-md space-y-2">
+        <label className="text-sm font-medium">Roles</label>
+        {ROLES.map((role) => (
+          <label key={role} className="flex items-center space-x-2">
+            <input type="checkbox" checked={userData.roles.includes(role)} onChange={() => handleRoleChange(role)} />
+            <span>{role}</span>
+          </label>
+        ))}
+      </div>
+
+      {/* Socials Section */}
+      <div className="flex flex-col w-full max-w-md space-y-2">
+        <label className="text-sm font-medium">Social Links</label>
+        {Object.keys(userData.socials).map((social) => (
+          <input key={social} type="text" name={social} placeholder={`${social.charAt(0).toUpperCase() + social.slice(1)} URL`} value={userData.socials[social]} onChange={handleChange} className="border p-2 rounded-md" />
+        ))}
+      </div>
+
+      {/* Profile Picture Upload */}
       <div className="w-full max-w-md flex flex-col space-y-2">
         <label className="text-sm font-medium">Profile Picture (Optional)</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setUserImage(e.target.files ? e.target.files[0] : null)}
-          className="border p-2 rounded-md"
-        />
-        {userImage && (
-          <div className="relative w-20 h-20 border rounded-md overflow-hidden">
-            <img src={URL.createObjectURL(userImage)} alt="Preview" className="w-full h-full object-cover" />
-            <button
-              onClick={() => setUserImage(null)}
-              className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1"
-            >
-              x
-            </button>
-          </div>
-        )}
+        <input type="file" accept="image/*" onChange={handleFileChange} className="border p-2 rounded-md" />
       </div>
 
-      <div className="w-full max-w-md flex flex-col space-y-2">
-        <label className="text-sm font-medium">Roles</label>
-        <div className="flex flex-wrap gap-2">
-          {ROLES.map((role) => (
-            <label key={role} className="flex items-center space-x-2 border px-3 py-1 rounded-md cursor-pointer">
-              <input
-                type="checkbox"
-                checked={userData.roles.includes(role)}
-                onChange={() => handleRoleChange(role)}
-              />
-              <span>{role}</span>
-            </label>
-          ))}
+      {/* Image Preview */}
+      {previewImage && (
+        <div className="w-full max-w-md flex flex-col items-center">
+          <p className="text-sm text-gray-600">Preview:</p>
+          <img src={previewImage} alt="Profile Preview" className="w-24 h-24 object-cover border" />
         </div>
-      </div>
+      )}
 
-      <div className="flex flex-col w-full max-w-md space-y-2">
-        <label className="text-sm font-medium">Social Links (Optional)</label>
-        <input
-          type="text"
-          name="facebook"
-          placeholder="Facebook URL"
-          value={userData.socials.facebook}
-          onChange={(e) => setUserData({ ...userData, socials: { ...userData.socials, facebook: e.target.value } })}
-          className="border p-2 rounded-md"
+      {/* Profile Image Cropper */}
+      {cropperOpen && userImage && (
+        <ProfileImageCropper
+          imageSrc={previewImage ?? ""}
+          onCropComplete={(cropped) => {
+            setCroppedImage(cropped);
+            setPreviewImage(cropped); 
+            setCropperOpen(false);
+          }}
+          onClose={() => setCropperOpen(false)}
         />
-        <input
-          type="text"
-          name="instagram"
-          placeholder="Instagram URL"
-          value={userData.socials.instagram}
-          onChange={(e) => setUserData({ ...userData, socials: { ...userData.socials, instagram: e.target.value } })}
-          className="border p-2 rounded-md"
-        />
-        <input
-          type="text"
-          name="linkedin"
-          placeholder="LinkedIn URL"
-          value={userData.socials.linkedin}
-          onChange={(e) => setUserData({ ...userData, socials: { ...userData.socials, linkedin: e.target.value } })}
-          className="border p-2 rounded-md"
-        />
-      </div>
+      )}
 
       <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full max-w-md" disabled={loading}>
-        {loading ? (mode === MODES.CREATE ? "Creating..." : "Updating...") : mode === MODES.CREATE ? "Create User" : "Update User"}
+        {loading ? "Processing..." : mode === MODES.CREATE ? "Create User" : "Update User"}
       </button>
     </div>
   );
