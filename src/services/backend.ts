@@ -1,3 +1,4 @@
+import { IContent } from "../definitions/content";
 import { ICreateEvent } from "../definitions/event";
 import { ICreateUser, LoginPayload } from "../definitions/user";
 import { RestService } from "./rest";
@@ -63,4 +64,15 @@ export const CreateEvent=(payload:ICreateEvent )=>{
 
 export const CreateUser=(payload:ICreateUser )=>{
     return getClient().post(urls.createUser,payload);
+}
+
+export const CreateContent=(payload: IContent)=>{
+    return getClient().post(urls.createContent,payload);
+}
+export const GetContents=()=>{
+    return getClient().get(urls.getContent);
+}
+
+export const UpdateContent=(payload:IContent)=>{
+    return getClient().post(urls.updateContent, payload);
 }

@@ -1,6 +1,7 @@
 
 export const LANGUAGE_KEY='language';
 export const DEFAULT_PAGE_SIZE=10;
+export const CONTENT_ABOUT='about'
 export enum LANGUAGE{
     en="en",bn="bn"
 }

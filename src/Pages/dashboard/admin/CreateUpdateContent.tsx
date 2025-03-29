@@ -1,195 +1,140 @@
-import { useState } from "react";
-import { CreateEvent } from "../../../services/backend";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../../firebase";
+import { useEffect, useState } from "react";
+import { GetContents, UpdateContent } from "../../../services/backend";
 import { toast } from "sonner";
-import { ICreateEvent } from "../../../definitions/event";
+import { IContent } from "../../../definitions/content";
+
+const sections = ["about", "events", "mission", "vision"]; // Example sections
 
 const CreateUpdateContent = () => {
-  const [eventData, setEventData] = useState<ICreateEvent>({
-    name: "",
-    description: "",
-    eventImages: [],
-    status: "active",
-    startDate: Date.now(),
-    endDate: Date.now(),
-    eventManagement: {
-      president: "",
-      treasurers: [""],
-      secretary: "",
-      vice_president: "",
-      vice_secretary: "",
-    },
-  });
-  const [images, setImages] = useState<File[]>([]);
+  const [selectedSection, setSelectedSection] = useState<string>("");
+  const [contentData, setContentData] = useState<IContent | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setEventData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEventData((prev) => ({ ...prev, [name]: new Date(value).getTime() }));
-  };
-
-  const handleImageUpload = async () => {
-    const uploadedUrls = await Promise.all(
-      images.map(async (image) => {
-        const storageRef = ref(storage, `${image.name}`);
-        const snapshot = await uploadBytes(storageRef, image);
-        return await getDownloadURL(snapshot.ref);
-      })
-    );
-    return uploadedUrls;
-  };
-
-  const handleSubmit = async () => {
-    if (!eventData.name || !eventData.startDate || !eventData.endDate) {
-      toast.error("Please fill all required fields.");
-      return;
+  useEffect(() => {
+    if (selectedSection) {
+      fetchContent(selectedSection);
     }
+  }, [selectedSection]);
+
+  const fetchContent = async (section: string) => {
     try {
       setLoading(true);
-      let uploadedImages: string[] = [];
-      if (images.length) {
-        uploadedImages = await handleImageUpload();
-      }
-      const payload = { ...eventData, eventImages: uploadedImages };
-      const res = await CreateEvent(payload);
+      const res = await GetContents();
       if (res.data.success) {
-        toast.success("Event created successfully");
-        setEventData({
-          name: "",
-          description: "",
-          eventImages: [],
-          status: "active",
-          startDate: Date.now(),
-          endDate: Date.now(),
-          eventManagement: {
-            president: "",
-            treasurers: [""],
-            secretary: "",
-            vice_president: "",
-            vice_secretary: "",
-          },
-        });
-        setImages([]);
+        const content = res.data.data.find(
+          (item: IContent) => item.section === section
+        );
+        if (content) {
+          setContentData(content);
+        } else {
+          setContentData({ _id: "", section, content: { en: {}, bn: {} } });
+        }
       } else {
-        toast.error("Failed to create event.");
+        toast.error("Failed to fetch content.");
       }
     } catch (error) {
-      console.error("Error creating event:", error);
-      toast.error("Error creating event.");
+      console.error("Error fetching content:", error);
+      toast.error("Error fetching content.");
     } finally {
       setLoading(false);
     }
   };
+
+  const handleContentChange = (
+    lang: "en" | "bn",
+    key: string,
+    value: string
+  ) => {
+    setContentData((prev) =>
+      prev
+        ? {
+            ...prev,
+            content: {
+              ...prev.content,
+              [lang]: {
+                ...prev.content[lang],
+                [key]: value,
+              },
+            },
+          }
+        : null
+    );
+  };
+
+  const handleUpdate = async () => {
+    if (!contentData || !contentData.section) {
+      toast.error("Please select a section.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const res = await UpdateContent(contentData);
+      if (res.data.success) {
+        toast.success("Content updated successfully.");
+      } else {
+        toast.error("Failed to update content.");
+      }
+    } catch (error) {
+      console.error("Error updating content:", error);
+      toast.error("Error updating content.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center mt-5 space-y-4 px-4 md:px-0">
-      <h2 className="text-xl font-semibold">Create New Content</h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="Event Name"
-        value={eventData.name}
-        onChange={handleChange}
+      <h2 className="text-xl font-semibold">Update Content</h2>
+      <select
+        value={selectedSection}
+        onChange={(e) => setSelectedSection(e.target.value)}
         className="border p-2 w-full max-w-md rounded-md"
-      />
-      <textarea
-        name="description"
-        placeholder="Description"
-        value={eventData.description}
-        onChange={handleChange}
-        className="border p-2 w-full max-w-md rounded-md"
-      />
-      <input
-        type="date"
-        name="startDate"
-        onChange={handleDateChange}
-        className="border p-2 w-full max-w-md rounded-md"
-      />
-      <input
-        type="date"
-        name="endDate"
-        onChange={handleDateChange}
-        className="border p-2 w-full max-w-md rounded-md"
-      />
-      <h3 className="text-lg">Event Management</h3>
-      <input
-        type="text"
-        name="president"
-        placeholder="President"
-        value={eventData.eventManagement.president}
-        onChange={(e) =>
-          setEventData((prev) => ({
-            ...prev,
-            eventManagement: {
-              ...prev.eventManagement,
-              president: e.target.value,
-            },
-          }))
-        }
-        className="border p-2 w-full max-w-md rounded-md"
-      />
-      <input
-        type="text"
-        name="secretary"
-        placeholder="Secretary"
-        value={eventData.eventManagement.secretary}
-        onChange={(e) =>
-          setEventData((prev) => ({
-            ...prev,
-            eventManagement: {
-              ...prev.eventManagement,
-              secretary: e.target.value,
-            },
-          }))
-        }
-        className="border p-2 w-full max-w-md rounded-md"
-      />
-      <div className="w-full max-w-md flex flex-col space-y-2">
-        <label className="text-sm font-medium">Upload Images</label>
-        <input
-          type="file"
-          multiple
-          onChange={(e) =>
-            setImages([...images, ...Array.from(e.target.files || [])])
-          }
-          className="border p-2 rounded-md"
-        />
-        <div className="flex flex-wrap gap-2 mt-2">
-          {images.map((img, idx) => (
-            <div
-              key={idx}
-              className="w-16 h-16 overflow-hidden border rounded-md relative"
-            >
-              <img
-                src={URL.createObjectURL(img)}
-                alt="preview"
-                className="w-full h-full object-cover"
-              />
-              <button
-                onClick={() => setImages(images.filter((_, i) => i !== idx))}
-                className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1"
-              >
-                x
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full max-w-md"
-        disabled={loading}
       >
-        {loading ? "Creating..." : "Create Event"}
-      </button>
+        <option value="">Select Section</option>
+        {sections.map((section) => (
+          <option key={section} value={section}>
+            {section.charAt(0).toUpperCase() + section.slice(1)}
+          </option>
+        ))}
+      </select>
+
+      {contentData && (
+        <>
+          <h3 className="text-lg font-semibold">English Content</h3>
+          {Object.keys(contentData.content.en).map((key) => (
+            <input
+              key={key}
+              type="text"
+              placeholder={key}
+              value={(contentData.content.en as Record<string, string>)[key] || ""}
+              onChange={(e) => handleContentChange("en", key, e.target.value)}
+              className="border p-2 w-full max-w-md rounded-md"
+            />
+          ))}
+
+          <h3 className="text-lg font-semibold">Bengali Content</h3>
+          {Object.keys(contentData.content.bn).map((key) => (
+            <input
+              key={key}
+              type="text"
+              placeholder={key}
+              value={(contentData.content.bn as Record<string, string>)[key] || ""}
+              onChange={(e) => handleContentChange("bn", key, e.target.value)}
+              className="border p-2 w-full max-w-md rounded-md"
+            />
+          ))}
+
+          <button
+            onClick={handleUpdate}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full max-w-md"
+            disabled={loading}
+          >
+            {loading ? "Updating..." : "Update Content"}
+          </button>
+        </>
+      )}
     </div>
   );
 };
+
 export default CreateUpdateContent;

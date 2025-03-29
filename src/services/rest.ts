@@ -25,4 +25,7 @@ export class RestService{
     post<T=unknown, P=unknown>(endpoint:string, payload:P){
         return this.client.post<T>(endpoint,payload);
     }
+    put<T=unknown, P=unknown>(endpoint:string, payload:P){
+        return this.client.put<T>(endpoint,payload);
+    }
 }

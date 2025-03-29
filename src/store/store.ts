@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit'
-import SectionSlice from './reducers/section'
+import SectionSlice from './reducers/content'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import memberSlice from './reducers/member';
 import UserSlice from './reducers/user';

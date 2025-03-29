@@ -19,3 +19,16 @@ export interface GetAboutResponse{
     success:boolean,
     data:IAbout
 }
+export interface IContent{
+    _id:string,
+    section:string,
+    content:{
+        en:Record<string,string>,
+        bn:Record<string,string>
+    }
+}
+export interface GetContentResponse{
+    success:boolean,
+    data?:IContent[],
+    message?:string
+}
