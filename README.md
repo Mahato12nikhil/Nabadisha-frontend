@@ -1,54 +1,50 @@
-# React + TypeScript + Vite
+# Nabadisha Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+Nabadisha Frontend is the **React and Redux-powered** frontend for the **Nabadisha Sangha** club website. It provides a dynamic and interactive user experience, showcasing the club's activities, events, and members. The website supports multilingual content in **English and Bengali**, ensuring accessibility for a diverse audience.
 
-Currently, two official plugins are available:
+## Features
+- **Multilingual Support** – Displays content in both **English & Bengali**.
+- **Event Listings** – Fetch and display upcoming club events.
+- **Member Profiles** – Showcase active members and contributors.
+- **Redux State Management** – Ensures smooth data handling and UI updates.
+- **Responsive Design** – Optimized for both desktop and mobile users.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+- **React** – UI development.
+- **Redux** – State management.
+- **TypeScript** – Type safety and better development experience.
+- **Tailwind CSS** – Styling.
+- **Axios** – API calls to the backend.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Installation
+```sh
+git clone https://github.com/Mahato12nikhil/Nabadisha-frontend.git
+cd Nabadisha-frontend
+npm install
+npm start
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## Environment Variables
+Create a `.env` file in the root directory and configure the following variables:
+```env
+REACT_APP_API_BASE_URL=<Backend API URL>
 ```
+
+## Running the Project
+```sh
+npm start  # Runs the development server
+```
+
+## Contributing
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Open a Pull Request.
+
+## License
+This project is licensed under the MIT License.
+
+## Contact
+For any queries, reach out via [GitHub Issues](https://github.com/Mahato12nikhil/Nabadisha-frontend/issues).
