@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateUser } from "../../../services/backend";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../../firebase";
@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { ICreateUser } from "../../../definitions/user";
 import { ToggleSwitch } from "../../../components/ToggleSwitch";
 import ProfileImageCropper from "../../../components/ProfileImageCropper";
+import { useAppSelector } from "../../../store/store";
 
 const MODES = {
   CREATE: "Create",
@@ -16,7 +17,7 @@ const ROLES = ["admin", "member", "treasurer"];
 
 const CreateUpdateUser = () => {
   const [mode, setMode] = useState<string>(MODES.CREATE);
-  const [userData, setUserData] = useState<ICreateUser & { confirmPassword?: string }>({
+  const [userData, setUserData] = useState<Partial<ICreateUser> & { confirmPassword?: string }>({
     name: "",
     username: "",
     password: "",
@@ -27,10 +28,11 @@ const CreateUpdateUser = () => {
     roles: [],
     socials: { facebook: "", instagram: "", linkedin: "" },
   });
+  const {user} =useAppSelector(state=>state.user);
 
   const [userImage, setUserImage] = useState<File | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null); // ✅ Added preview image state
+  const [previewImage, setPreviewImage] = useState<string | null>(null); 
   const [cropperOpen, setCropperOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -49,9 +51,9 @@ const CreateUpdateUser = () => {
   const handleRoleChange = (role: string) => {
     setUserData((prev) => ({
       ...prev,
-      roles: prev.roles.includes(role)
+      roles: prev.roles?.includes(role)
         ? prev.roles.filter((r) => r !== role)
-        : [...prev.roles, role],
+        : [...(prev.roles || []), role],
     }));
   };
 
@@ -91,7 +93,18 @@ const CreateUpdateUser = () => {
         uploadedImageUrl = await handleImageUpload();
       }
 
-      const { confirmPassword, ...payload } = { ...userData, userPic: uploadedImageUrl };
+      const { confirmPassword, ...userDataWithoutConfirmPassword } = userData;
+      const payload: ICreateUser = {
+        ...userDataWithoutConfirmPassword,
+        userPic: uploadedImageUrl,
+        name: userData.name || "", 
+        username: userData.username || "",
+        password: userData.password || "",
+        phone: userData.phone || "",
+        isActive: true, 
+        roles: userData.roles || [],
+        socials: userData.socials || {}, 
+      };
 
       let res;
       if (mode === MODES.CREATE) {
@@ -134,10 +147,26 @@ const CreateUpdateUser = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setUserImage(file);
-      setPreviewImage(imageUrl); // Set preview image
+      setPreviewImage(imageUrl); 
       setCropperOpen(true);
     }
   };
+
+  useEffect(()=>{
+    if(user && MODES.UPDATE){
+
+      setUserData({
+        name: user.name,
+        username: user.username,
+        phone: user.phone,
+        isActive: true,
+        userPic: user.userPic,
+        roles: user.roles,
+        socials: { facebook: user.socials?.facebook ||"", instagram: user.socials?.instagram ||"", linkedin: user.socials?.linkedin ||"" },
+      });
+
+    }
+  },[user])
 
   return (
     <div className="w-full flex flex-col items-center mt-5 space-y-4 px-4 md:px-0">
@@ -161,21 +190,29 @@ const CreateUpdateUser = () => {
       <input type="text" name="phone" placeholder="Phone Number" value={userData.phone} onChange={handleChange} className="border p-2 w-full max-w-md rounded-md" />
 
       {/* Roles Section */}
-      <div className="flex flex-col w-full max-w-md space-y-2">
+      {(mode===MODES.CREATE ||  user?.roles.includes('admin') )&& <div className="flex flex-col w-full max-w-md space-y-2">
         <label className="text-sm font-medium">Roles</label>
         {ROLES.map((role) => (
           <label key={role} className="flex items-center space-x-2">
-            <input type="checkbox" checked={userData.roles.includes(role)} onChange={() => handleRoleChange(role)} />
+            <input type="checkbox" checked={(userData.roles || []).includes(role)} onChange={() => handleRoleChange(role)} />
             <span>{role}</span>
           </label>
         ))}
-      </div>
+      </div>}
 
       {/* Socials Section */}
       <div className="flex flex-col w-full max-w-md space-y-2">
         <label className="text-sm font-medium">Social Links</label>
-        {Object.keys(userData.socials).map((social) => (
-          <input key={social} type="text" name={social} placeholder={`${social.charAt(0).toUpperCase() + social.slice(1)} URL`} value={userData.socials[social]} onChange={handleChange} className="border p-2 rounded-md" />
+        {Object.keys(userData.socials || {}).map((social) => (
+          <input
+            key={social}
+            type="text"
+            name={social}
+            placeholder={`${social.charAt(0).toUpperCase() + social.slice(1)} URL`}
+            value={userData.socials?.[social] || ""}
+            onChange={handleChange}
+            className="border p-2 rounded-md"
+          />
         ))}
       </div>
 

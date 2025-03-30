@@ -3,7 +3,9 @@ import { ICollection, IExpense } from "../definitions/event";
 import { CellValueChangedEvent, ColDef, GridReadyEvent, themeBalham } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { CellStyleModule, ClientSideRowModelModule, ColumnAutoSizeModule, ModuleRegistry, NumberEditorModule, NumberFilterModule, PaginationModule, QuickFilterModule, TextEditorModule, TextFilterModule, ValidationModule } from "ag-grid-community";
-
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { Button } from "./ui/button";
 
 ModuleRegistry.registerModules([
   CellStyleModule,
@@ -43,7 +45,20 @@ const Table: React.FC<TableProps> = ({
      setQuickFilterText(e.target.value);
   };
 
-  
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const tableColumn = coldefs.map(col => col.headerName || "");
+    const tableRows = data.map(row => coldefs.map(col => row[col.field as keyof typeof row] || ""));
+
+    doc.text("Event Data", 14, 10);
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("event_data.pdf");
+  };
   const onCellValueChanged = useCallback(
       (event: CellValueChangedEvent<ICollection | IExpense>) => {
         console.log("Saving updated data...");
@@ -69,6 +84,9 @@ const Table: React.FC<TableProps> = ({
           className="w-full md:w-[20%] p-2 border rounded"
         />
       </div>
+      <Button onClick={exportToPDF} className="mt-2 mb-2 bg-blue-500">
+          Export to PDF
+      </Button>
 
       <div className="w-full h-[500px] rounded-lg border">
         <AgGridReact<ICollection | IExpense>
