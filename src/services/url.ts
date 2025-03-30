@@ -1,5 +1,5 @@
-//export const baseUrl='https://nabadisha-backend-new.onrender.com' 
-export const baseUrl='http://localhost:5090' 
+export const baseUrl='https://nabadisha-backend-new.onrender.com' 
+//export const baseUrl='http://localhost:5090' 
 
 
 export const urls={
