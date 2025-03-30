@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit'
-import SectionSlice from './reducers/content'
+import ContentSlice from './reducers/content'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import memberSlice from './reducers/member';
 import UserSlice from './reducers/user';
@@ -8,7 +8,7 @@ import eventSlice from './reducers/event';
 
 export const store=configureStore({
     reducer:{
-        section: SectionSlice,
+        content: ContentSlice,
         member:memberSlice,
         user: UserSlice.reducer,
         dashboard:dashBoardSlice.reducer,

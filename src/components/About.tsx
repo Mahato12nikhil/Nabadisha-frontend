@@ -5,7 +5,7 @@ import { useLanguage } from '../hooks/LanguageProvider';
 
 const About: React.FC = () => {
 
-    const { about } = useAppSelector((state) => state.section);
+    const { about } = useAppSelector((state) => state.content);
     const dispatch=useAppDispatch();
     const {language}=useLanguage()
     const langKey = language as keyof typeof about.content;
@@ -14,7 +14,8 @@ const About: React.FC = () => {
     },[])
     
     return (
-        <section className="p-6">
+        <section className="p-6 relative">
+             {/* {true && <Loader/>} */}
             <h1 className="text-2xl mb-5">| About us</h1>
 
             <p className="text-lg leading-relaxed select-none">
@@ -33,6 +34,7 @@ const About: React.FC = () => {
                 <br /><br />
                 {about.content[langKey]?.commitment}
             </p>
+
         </section>
     );
 };

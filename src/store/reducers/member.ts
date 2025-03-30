@@ -4,9 +4,11 @@ import { RootState } from "../store";
 import { GetMembersResponse, IUser } from "../../definitions/user";
 
 interface MemberStateType{
+  loading:boolean,
   members:IUser[]
 }
 const initialState:MemberStateType = {
+  loading:false,
   members:[]
 };
 
@@ -28,11 +30,17 @@ const memberSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    .addCase(fetchMembers.pending, (state) => {
+      state.loading = true; 
+    })
+    builder
       .addCase(fetchMembers.fulfilled, (state, action) => {
         state.members = action.payload.users; 
+        state.loading=false;
       })
       .addCase(fetchMembers.rejected, (_, action) => {
         console.error(action.payload);
+        _.loading=false;
       });
   },
 });
